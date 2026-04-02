@@ -1,0 +1,376 @@
+/* =============================================
+   RED DEVILS HUB — GLOBAL STYLES
+   ============================================= */
+ 
+/* GLOBAL BACKGROUND */
+body {
+  background: radial-gradient(circle at top, #ffffff 0%, #f3f4f6 45%, #eceff3 100%);
+}
+ 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(220,53,69,0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.12;
+  z-index: -1;
+}
+ 
+/* =============================================
+   NAVBAR
+   ============================================= */
+.custom-navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #dc3545;
+}
+ 
+.header-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+ 
+.header-logo:hover {
+  transform: rotate(-5deg) scale(1.05);
+}
+ 
+.brand-title {
+  font-weight: 700;
+  font-size: 18px;
+  display: block;
+  line-height: 1.1;
+}
+ 
+.brand-subtitle {
+  font-size: 13px;
+  color: #6c757d;
+}
+ 
+.navbar-nav .nav-link {
+  position: relative;
+  margin-left: 20px;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.2s ease;
+}
+ 
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #dc3545;
+  transition: width 0.3s ease;
+}
+ 
+.navbar-nav .nav-link:hover {
+  color: #dc3545;
+}
+ 
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+ 
+.navbar-nav .nav-link.active {
+  color: #dc3545;
+  font-weight: 600;
+}
+ 
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+}
+ 
+/* =============================================
+   HERO SECTION
+   ============================================= */
+.hero-section {
+  min-height: 100vh;
+  background: url('../assets/123.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+ 
+.hero-section .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(138, 0, 0, 0.35);
+  z-index: 0;
+}
+ 
+.hero-content {
+  z-index: 1;
+  max-width: 700px;
+  padding: 2rem;
+}
+ 
+/* =============================================
+   SECTION BOX
+   ============================================= */
+.section-box {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.10);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 60px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+ 
+.section-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, #dc3545, #a00000);
+}
+ 
+.section-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+}
+ 
+/* =============================================
+   CARDS
+   ============================================= */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 16px;
+}
+ 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+ 
+/* =============================================
+   MATCH CAROUSEL
+   ============================================= */
+.match-image {
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+ 
+/* =============================================
+   PREMIER LEAGUE TABLE
+   ============================================= */
+.table {
+  border-radius: 14px;
+  overflow: hidden;
+}
+ 
+.table thead th {
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: none;
+}
+ 
+.table tbody tr:hover {
+  background: rgba(220, 53, 69, 0.06);
+  transition: 0.15s ease;
+}
+ 
+.club-logo {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+ 
+.form-circle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 3px;
+  color: white;
+  text-align: center;
+}
+ 
+.win  { background-color: #28a745; }
+.draw { background-color: #ffc107; color: black; }
+.loss { background-color: #dc3545; }
+ 
+.highlight-row {
+  animation: glow 2s infinite alternate;
+  font-weight: bold;
+}
+ 
+@keyframes glow {
+  from { background-color: rgba(220, 53, 69, 0.2); }
+  to   { background-color: rgba(220, 53, 69, 0.5); }
+}
+ 
+/* =============================================
+   FORMS
+   ============================================= */
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  padding: 12px 14px;
+}
+ 
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(220, 53, 69, 0.55);
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+}
+ 
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn-danger {
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(220, 53, 69, 0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+ 
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(220, 53, 69, 0.35);
+}
+ 
+/* =============================================
+   FOOTER
+   ============================================= */
+.main-footer {
+  background-color: #111827;
+}
+ 
+.footer-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+ 
+.footer-link {
+  color: #adb5bd;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+ 
+.footer-link:hover {
+  color: white;
+}
+ 
+.social-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #1b263b;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: 0.3s;
+}
+ 
+.social-icon:hover {
+  background-color: #dc3545;
+  transform: translateY(-3px);
+}
+ 
+/* =============================================
+   DARK MODE TOGGLE BUTTON
+   ============================================= */
+.dark-toggle-btn {
+  border-radius: 50px;
+  padding: 6px 10px;
+  background: #111827;
+  color: white;
+  transition: 0.3s;
+}
+ 
+.dark-toggle-btn:hover {
+  background: #dc3545;
+  color: white;
+}
+ 
+/* =============================================
+   DARK MODE
+   ============================================= */
+body {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+ 
+body.dark-mode {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+ 
+body.dark-mode .custom-navbar {
+  background: #111827;
+  border-bottom: 3px solid #dc3545;
+}
+ 
+body.dark-mode .navbar-nav .nav-link {
+  color: #e2e8f0;
+}
+ 
+body.dark-mode .navbar-nav .nav-link:hover {
+  color: #dc3545;
+}
+ 
+body.dark-mode .brand-title {
+  color: #ffffff;
+}
+ 
+body.dark-mode .brand-subtitle {
+  color: #cbd5e1;
+}
+ 
+body.dark-mode .section-box,
+body.dark-mode .card {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+ 
+body.dark-mode .table {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+ 
+body.dark-mode .table thead th {
+  background: #0f172a;
+}
+ 
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background: #1e293b;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+ 
+body.dark-mode .main-footer {
+  background-color: #0f172a;
+}
+ 
+/* =============================================
+   SPACING
+   ============================================= */
+section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}

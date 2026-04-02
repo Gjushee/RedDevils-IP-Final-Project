@@ -1,0 +1,186 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}{{ product.name }} — Red Devils Hub{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+ 
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-danger">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalogue:catalogue' %}" class="text-danger">Catalogue</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'catalogue:catalogue' %}?category={{ product.subcategory.category.slug }}"
+                   class="text-danger">{{ product.subcategory.category.name }}</a>
+            </li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
+ 
+    <div class="section-box">
+        <div class="row g-5">
+ 
+            <!-- Product Images -->
+            <div class="col-md-5">
+                {% if product.primary_image %}
+                <img src="{{ product.primary_image.image.url }}"
+                     alt="{{ product.name }}"
+                     class="img-fluid rounded-3 shadow w-100"
+                     style="max-height:450px; object-fit:cover;">
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center bg-light rounded-3"
+                     style="height:350px;">
+                    <i class="bi bi-image text-muted" style="font-size:5rem;"></i>
+                </div>
+                {% endif %}
+ 
+                <!-- Thumbnail gallery -->
+                {% if product.images.count > 1 %}
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    {% for img in product.images.all %}
+                    <img src="{{ img.image.url }}" alt="{{ img.alt_text }}"
+                         class="rounded border"
+                         style="width:70px; height:70px; object-fit:cover; cursor:pointer;">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+ 
+            <!-- Product Info -->
+            <div class="col-md-7">
+ 
+                <!-- Access badge -->
+                {% if product.access_level == 'gold' %}
+                <span class="badge mb-2 px-3 py-2"
+                      style="background:linear-gradient(90deg,#b8860b,#ffd700);color:#000;">
+                    Gold Member Exclusive
+                </span>
+                {% elif product.access_level == 'red' %}
+                <span class="badge bg-danger mb-2 px-3 py-2">Red Member+</span>
+                {% endif %}
+ 
+                <small class="text-muted d-block mb-1">
+                    {{ product.subcategory.category.name }} › {{ product.subcategory.name }}
+                </small>
+ 
+                <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+ 
+                {% if product.player %}
+                <p class="text-danger fw-semibold mb-3">
+                    <i class="bi bi-person-fill me-1"></i>{{ product.player.name }} Collection
+                </p>
+                {% endif %}
+ 
+                <h3 class="fw-bold text-danger mb-3">£{{ product.price }}</h3>
+ 
+                <!-- Product Meta -->
+                <div class="row g-2 mb-4">
+                    {% if product.size %}
+                    <div class="col-auto">
+                        <span class="badge bg-light text-dark border px-3 py-2">
+                            <i class="bi bi-rulers me-1"></i>Size: {{ product.size }}
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% if product.colour %}
+                    <div class="col-auto">
+                        <span class="badge bg-light text-dark border px-3 py-2">
+                            <i class="bi bi-palette me-1"></i>{{ product.colour }}
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% if product.brand %}
+                    <div class="col-auto">
+                        <span class="badge bg-light text-dark border px-3 py-2">
+                            <i class="bi bi-tag me-1"></i>{{ product.brand }}
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% if product.season %}
+                    <div class="col-auto">
+                        <span class="badge bg-light text-dark border px-3 py-2">
+                            <i class="bi bi-calendar me-1"></i>{{ product.season }}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+ 
+                <!-- Stock Status -->
+                <div class="mb-3">
+                    {% if product.is_in_stock %}
+                    <span class="badge bg-success px-3 py-2">
+                        <i class="bi bi-check-circle me-1"></i>In Stock ({{ product.stock_quantity }} available)
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger px-3 py-2">
+                        <i class="bi bi-x-circle me-1"></i>Out of Stock
+                    </span>
+                    {% endif %}
+                </div>
+ 
+                {% if product.description %}
+                <p class="text-muted mb-4">{{ product.description }}</p>
+                {% endif %}
+ 
+                <!-- Action Buttons -->
+                {% if user.is_authenticated %}
+                    {% if product.is_in_stock %}
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#" class="btn btn-danger btn-lg px-5">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                        </a>
+                        <a href="#" class="btn btn-outline-danger btn-lg">
+                            <i class="bi bi-heart me-1"></i>Wishlist
+                        </a>
+                    </div>
+                    {% else %}
+                    <button class="btn btn-secondary btn-lg px-5" disabled>Out of Stock</button>
+                    {% endif %}
+                {% else %}
+                <div class="alert alert-light border">
+                    <i class="bi bi-lock me-2"></i>
+                    <a href="{% url 'register:login' %}" class="text-danger fw-semibold">Log in</a>
+                    to add this item to your cart or wishlist.
+                </div>
+                {% endif %}
+ 
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Related Products -->
+    {% if related %}
+    <div class="section-box mt-4">
+        <h5 class="fw-bold mb-4">Related Products</h5>
+        <div class="row g-4">
+            {% for item in related %}
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    {% if item.primary_image %}
+                    <img src="{{ item.primary_image.image.url }}" alt="{{ item.name }}"
+                         class="card-img-top" style="height:180px; object-fit:cover;">
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light"
+                         style="height:180px;">
+                        <i class="bi bi-image text-muted fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-1">{{ item.name }}</h6>
+                        <span class="text-danger fw-bold">£{{ item.price }}</span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <a href="{% url 'catalogue:product_detail' item.slug %}"
+                           class="btn btn-outline-danger btn-sm w-100">View</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+ 
+</section>
+{% endblock %}

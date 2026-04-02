@@ -1,0 +1,75 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}Login — Red Devils Hub{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="section-box">
+ 
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <img src="{% static 'assets/logo1.png' %}" alt="Logo" style="width:70px;" class="mb-3">
+                    <h3 class="fw-bold">Welcome Back</h3>
+                    <p class="text-muted">Log in to your Red Devils Hub account</p>
+                </div>
+ 
+                <!-- Django messages -->
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+ 
+                <!-- Login Form -->
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+ 
+                    <!-- Username or Email -->
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">
+                            Username or Email <span class="text-danger">*</span>
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+ 
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">
+                            Password <span class="text-danger">*</span>
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+ 
+                    <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
+                        Log In
+                    </button>
+                </form>
+ 
+                <hr class="my-4">
+ 
+                <!-- Membership reminder -->
+                <div class="text-center">
+                    <p class="text-muted mb-1 small">
+                        Don't have an account?
+                        <a href="{% url 'register:register' %}" class="text-danger fw-semibold">Register here</a>
+                    </p>
+                    <p class="text-muted small mb-0">
+                        After registering, check your email to verify your account before logging in.
+                    </p>
+                </div>
+ 
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}My Profile — Red Devils Hub{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+ 
+    <div class="row g-4">
+ 
+        <!-- ═══════════ LEFT COLUMN — Profile Card ═══════════ -->
+        <div class="col-lg-4">
+            <div class="section-box text-center">
+ 
+                <!-- Avatar -->
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}"
+                         alt="Profile"
+                         class="rounded-circle mb-3 border border-3 border-danger"
+                         style="width:120px; height:120px; object-fit:cover;">
+                {% else %}
+                    <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width:120px; height:120px;">
+                        <i class="bi bi-person-fill text-white" style="font-size:3.5rem;"></i>
+                    </div>
+                {% endif %}
+ 
+                <h4 class="fw-bold mb-0">
+                    {{ profile.full_name|default:request.user.username }}
+                </h4>
+                <p class="text-muted small mb-2">@{{ request.user.username }}</p>
+ 
+                <!-- Membership badge -->
+                {% if profile.role == 'gold' %}
+                    <span class="badge px-3 py-2 mb-3"
+                          style="background:linear-gradient(90deg,#b8860b,#ffd700);color:#000;">
+                        Gold Member
+                    </span>
+                {% elif profile.role == 'red' %}
+                    <span class="badge bg-danger px-3 py-2 mb-3">Red Member</span>
+                {% elif profile.role == 'admin' %}
+                    <span class="badge bg-dark px-3 py-2 mb-3">Admin</span>
+                {% else %}
+                    <span class="badge bg-secondary px-3 py-2 mb-3">Free Member</span>
+                {% endif %}
+ 
+                <hr>
+ 
+                <!-- Quick info -->
+                <div class="text-start">
+                    <p class="mb-2 small">
+                        <i class="bi bi-envelope-fill text-danger me-2"></i>
+                        {{ request.user.email }}
+                    </p>
+                    {% if profile.phone_number %}
+                    <p class="mb-2 small">
+                        <i class="bi bi-telephone-fill text-danger me-2"></i>
+                        {{ profile.phone_number }}
+                    </p>
+                    {% endif %}
+                    {% if profile.favourite_player %}
+                    <p class="mb-2 small">
+                        <i class="bi bi-star-fill text-danger me-2"></i>
+                        Favourite: <strong>{{ profile.favourite_player }}</strong>
+                    </p>
+                    {% endif %}
+                    {% if profile.date_of_birth %}
+                    <p class="mb-2 small">
+                        <i class="bi bi-calendar-fill text-danger me-2"></i>
+                        {{ profile.date_of_birth }}
+                    </p>
+                    {% endif %}
+                    <p class="mb-2 small">
+                        <i class="bi bi-clock-fill text-danger me-2"></i>
+                        Member since {{ request.user.date_joined|date:"M Y" }}
+                    </p>
+                    <p class="mb-0 small">
+                        <i class="bi bi-patch-check-fill text-success me-2"></i>
+                        Email
+                        {% if profile.email_verified %}
+                            <span class="text-success">verified</span>
+                        {% else %}
+                            <span class="text-danger">not verified</span>
+                        {% endif %}
+                    </p>
+                </div>
+ 
+                <hr>
+ 
+                {% if profile.bio %}
+                <p class="text-muted small fst-italic">"{{ profile.bio }}"</p>
+                <hr>
+                {% endif %}
+ 
+                <a href="{% url 'register:edit_profile' %}" class="btn btn-danger w-100">
+                    <i class="bi bi-pencil-fill me-2"></i>Edit Profile
+                </a>
+ 
+            </div>
+        </div>
+ 
+        <!-- ═══════════ RIGHT COLUMN — Dashboard Widgets ═══════════ -->
+        <div class="col-lg-8">
+ 
+            <!-- Stats Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="section-box text-center py-3 mb-0">
+                        <i class="bi bi-heart-fill text-danger fs-2 mb-2"></i>
+                        <h4 class="fw-bold mb-0">{{ wishlist_count }}</h4>
+                        <small class="text-muted">Wishlist Items</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="section-box text-center py-3 mb-0">
+                        <i class="bi bi-star-fill text-danger fs-2 mb-2"></i>
+                        <h4 class="fw-bold mb-0">{{ ratings_count }}</h4>
+                        <small class="text-muted">Player Ratings</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="section-box text-center py-3 mb-0">
+                        <i class="bi bi-chat-square-text-fill text-danger fs-2 mb-2"></i>
+                        <h4 class="fw-bold mb-0">{{ reviews_count }}</h4>
+                        <small class="text-muted">Reviews</small>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Membership Details -->
+            <div class="section-box mb-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-trophy-fill text-danger me-2"></i>Membership Status
+                </h5>
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div>
+                        {% if profile.role == 'gold' %}
+                            <p class="mb-1 fw-semibold">You are a <span style="color:#b8860b;">Gold Member</span></p>
+                            <p class="text-muted small mb-0">
+                                You have access to premium player analysis, early product access, and all Red features.
+                            </p>
+                        {% elif profile.role == 'red' %}
+                            <p class="mb-1 fw-semibold">You are a <span class="text-danger">Red Member</span></p>
+                            <p class="text-muted small mb-0">
+                                You can submit transfer rumours and access member discounts.
+                            </p>
+                        {% elif profile.role == 'admin' %}
+                            <p class="mb-1 fw-semibold">You are an <span class="text-dark">Admin</span></p>
+                            <p class="text-muted small mb-0">Full platform access and moderation tools.</p>
+                        {% else %}
+                            <p class="mb-1 fw-semibold">You are on the <span class="text-muted">Free plan</span></p>
+                            <p class="text-muted small mb-0">
+                                Upgrade to Red or Gold to unlock exclusive features.
+                            </p>
+                        {% endif %}
+                    </div>
+                    {% if profile.role == 'free' %}
+                    <a href="#" class="btn btn-danger btn-sm px-4">Upgrade</a>
+                    {% endif %}
+                </div>
+            </div>
+ 
+            <!-- Feature Access -->
+            <div class="section-box mb-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-shield-fill text-danger me-2"></i>Your Access
+                </h5>
+                <div class="row g-2">
+ 
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span class="small">Browse catalogue</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span class="small">Rate players</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span class="small">Wishlist &amp; cart</span>
+                        </div>
+                    </div>
+ 
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            {% if profile.is_red_or_above %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-lock-fill text-danger"></i>
+                            {% endif %}
+                            <span class="small">Submit transfer rumours</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            {% if profile.is_red_or_above %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-lock-fill text-danger"></i>
+                            {% endif %}
+                            <span class="small">Member discounts</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            {% if profile.is_gold_or_above %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-lock-fill text-danger"></i>
+                            {% endif %}
+                            <span class="small">Premium player analysis</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded border">
+                            {% if profile.is_gold_or_above %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            {% else %}
+                            <i class="bi bi-lock-fill text-danger"></i>
+                            {% endif %}
+                            <span class="small">Early access products</span>
+                        </div>
+                    </div>
+ 
+                </div>
+            </div>
+ 
+            <!-- Quick Links -->
+            <div class="section-box">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-grid-fill text-danger me-2"></i>Quick Links
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a href="{% url 'catalogue:catalogue' %}"
+                           class="btn btn-outline-danger w-100">
+                            <i class="bi bi-bag me-2"></i>Shop
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-heart me-2"></i>Wishlist
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-arrow-left-right me-2"></i>Transfers
+                        </a>
+                    </div>
+                </div>
+            </div>
+ 
+        </div>
+    </div>
+</section>
+{% endblock %}

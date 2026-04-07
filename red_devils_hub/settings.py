@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "core",
     "register",
     "catalogue", 
+    "matches",
+    "transfers",  
 ]
  
 MIDDLEWARE = [

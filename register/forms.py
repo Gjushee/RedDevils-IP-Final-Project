@@ -2,6 +2,8 @@ import re
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Profile
+
  
  
 class RegistrationForm(UserCreationForm):
@@ -93,3 +95,51 @@ class LoginForm(forms.Form):
             'placeholder': 'Your password',
         }),
     )
+
+class EditProfileForm(forms.ModelForm):
+    """Form for updating the User's basic info."""
+    first_name = forms.CharField(
+        max_length=100, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name'}),
+    )
+    last_name = forms.CharField(
+        max_length=100, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name'}),
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+    )
+ 
+    class Meta:
+        model = Profile
+        fields = ('full_name', 'bio', 'profile_image', 'favourite_player', 'date_of_birth', 'phone_number')
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'Your full name',
+            }),
+            'bio': forms.Textarea(attrs={
+                'class': 'form-control', 'rows': 3, 'placeholder': 'Tell us about yourself...',
+            }),
+            'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'favourite_player': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': 'e.g. Bruno Fernandes',
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'form-control', 'type': 'date',
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control', 'placeholder': '+44 7700 000000',
+            }),
+        }
+ 
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial  = user.last_name
+            self.fields['email'].initial      = user.email
+ 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').lower()
+        return email

@@ -1,0 +1,127 @@
+/* ===================== ADMIN HEADER ===================== */
+.admin-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 60%, #dc3545 100%);
+    padding: 1.5rem 0;
+    border-bottom: 3px solid #dc3545;
+}
+
+.admin-avatar {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+/* ===================== STAT CARDS ===================== */
+.admin-stat-card {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    height: 100%;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.admin-stat-card i {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+.admin-stat-alert {
+    border: 2px solid #ffc107 !important;
+}
+
+/* ===================== ADMIN PANELS ===================== */
+.admin-panel {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+
+.admin-panel-header {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+.admin-panel-body {
+    padding: 1.25rem;
+}
+
+/* ===================== ROLE PILLS ===================== */
+.role-pill {
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.role-count {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.role-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.role-free  { background: #f8f9fa; color: #6c757d; }
+.role-red   { background: #fff5f5; color: #dc3545; }
+.role-gold  { background: #fffbec; color: #b8860b; }
+.role-admin { background: #f0f0f0; color: #212529; }
+
+/* ===================== TABLE TWEAKS ===================== */
+.admin-panel .table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.admin-panel .table tbody td {
+    font-size: 0.88rem;
+}
+
+/* ===================== DARK MODE ===================== */
+body.dark-mode .admin-stat-card { background: #1e1e1e; }
+body.dark-mode .admin-panel { background: #1e1e1e; }
+body.dark-mode .admin-panel-header { background: #111; }
+body.dark-mode .role-free  { background: #2a2a2a; color: #adb5bd; }
+body.dark-mode .role-red   { background: #2d1515; color: #f87b7b; }
+body.dark-mode .role-gold  { background: #2d2810; color: #ffd060; }
+body.dark-mode .role-admin { background: #222;    color: #e0e0e0; }
+body.dark-mode .list-group-item {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+.admin-profile-banner {
+  background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 60%, #dc3545 100%);
+  padding: 1rem 0;
+  border-bottom: 3px solid #dc3545;
+}

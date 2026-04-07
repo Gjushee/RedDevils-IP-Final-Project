@@ -25,18 +25,20 @@ body::before {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border-bottom: 3px solid #dc3545;
 }
+
  
 .header-logo {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
   border-radius: 50%;
   transition: transform 0.3s ease;
 }
+
  
 .header-logo:hover {
   transform: rotate(-5deg) scale(1.05);
@@ -44,16 +46,16 @@ body::before {
  
 .brand-title {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
   display: block;
   line-height: 1.1;
 }
- 
+
 .brand-subtitle {
-  font-size: 13px;
+  font-size: 11px;
   color: #6c757d;
 }
- 
+
 .navbar-nav .nav-link {
   position: relative;
   margin-left: 20px;
@@ -62,16 +64,16 @@ body::before {
   transition: color 0.2s ease;
 }
  
-.navbar-nav .nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 0%;
-  height: 2px;
-  background: #dc3545;
-  transition: width 0.3s ease;
+.navbar-nav .nav-link {
+  position: relative;
+  margin-left: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  color: #333;
+  transition: color 0.2s ease;
 }
+
  
 .navbar-nav .nav-link:hover {
   color: #dc3545;
@@ -89,6 +91,13 @@ body::before {
 .navbar-nav .nav-link.active::after {
   width: 100%;
 }
+
+/* Shrink auth buttons in navbar so they don't crowd */
+.custom-navbar .btn-sm {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+}
+
  
 /* =============================================
    HERO SECTION

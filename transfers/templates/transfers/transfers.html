@@ -1,0 +1,357 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}Transfer Rumours — Red Devils Hub{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'transfers/css/transfers.css' %}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- ===================== HERO ===================== -->
+<section class="transfers-hero d-flex align-items-center justify-content-center text-center text-white">
+    <div class="overlay"></div>
+    <div class="position-relative px-3">
+        <h1 class="display-4 fw-bold">Transfer Rumours</h1>
+        <p class="lead">Track the latest Manchester United transfer links. Red members can submit their own sources.</p>
+    </div>
+</section>
+ 
+<!-- ===================== STATS CARDS ===================== -->
+<section class="container my-5">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <i class="bi bi-newspaper fs-1 text-danger mb-2"></i>
+                    <h2 class="fw-bold">{{ total }}</h2>
+                    <p class="text-muted mb-0">Total Approved Rumours</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <i class="bi bi-fire fs-1 text-danger mb-2"></i>
+                    <h2 class="fw-bold">{{ very_likely }}</h2>
+                    <p class="text-muted mb-0">Very Likely (8+)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <i class="bi bi-bar-chart-fill fs-1 text-danger mb-2"></i>
+                    <h2 class="fw-bold">{{ avg_likelihood }}/10</h2>
+                    <p class="text-muted mb-0">Average Likelihood</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+<!-- ===================== FAVOURITE TRANSFERS CAROUSEL ===================== -->
+<section class="container my-5">
+    <div class="section-box">
+        <h3 class="text-center mb-4 fw-bold">Fan Favourite Targets</h3>
+        <div id="favTransfersCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner rounded">
+ 
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <div class="fav-transfer-card text-center p-4">
+                        <div class="fav-player-img-wrapper mx-auto mb-3">
+                            <img src="{% static 'transfers/assets/osimhen.jpg' %}" alt="Osimhen" class="fav-player-img">
+                        </div>
+                        <h4 class="fw-bold">Victor Osimhen</h4>
+                        <p class="text-muted mb-1">Napoli · Forward · 25</p>
+                        <span class="badge bg-danger px-3 py-2">~£100m</span>
+                        <p class="mt-3 text-muted small fav-desc">
+                            Clinical Nigerian striker with elite pace and finishing. Premier League clubs are circling and United need a proven No.9.
+                        </p>
+                    </div>
+                </div>
+ 
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="fav-transfer-card text-center p-4">
+                        <div class="fav-player-img-wrapper mx-auto mb-3">
+                            <img src="{% static 'transfers/assets/dejong.jpg' %}" alt="De Jong" class="fav-player-img">
+                        </div>
+                        <h4 class="fw-bold">Frenkie de Jong</h4>
+                        <p class="text-muted mb-1">Barcelona · Midfielder · 27</p>
+                        <span class="badge bg-danger px-3 py-2">~£85m</span>
+                        <p class="mt-3 text-muted small fav-desc">
+                            United's long-standing midfield target. Deep-lying playmaker who would transform the engine room alongside Kobbie Mainoo.
+                        </p>
+                    </div>
+                </div>
+ 
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <div class="fav-transfer-card text-center p-4">
+                        <div class="fav-player-img-wrapper mx-auto mb-3">
+                            <img src="{% static 'transfers/assets/branthwaite.jpg' %}" alt="Branthwaite" class="fav-player-img">
+                        </div>
+                        <h4 class="fw-bold">Jarrad Branthwaite</h4>
+                        <p class="text-muted mb-1">Everton · Defender · 22</p>
+                        <span class="badge bg-danger px-3 py-2">~£70m</span>
+                        <p class="mt-3 text-muted small fav-desc">
+                            Tall, commanding centre-back who has broken out with Everton. Strong in the air and composed in possession — a generational centre-back target.
+                        </p>
+                    </div>
+                </div>
+ 
+                <!-- Slide 4 -->
+                <div class="carousel-item">
+                    <div class="fav-transfer-card text-center p-4">
+                        <div class="fav-player-img-wrapper mx-auto mb-3">
+                            <img src="{% static 'transfers/assets/diogo_costa.jpg' %}" alt="Diogo Costa" class="fav-player-img">
+                        </div>
+                        <h4 class="fw-bold">Diogo Costa</h4>
+                        <p class="text-muted mb-1">Porto · Goalkeeper · 25</p>
+                        <span class="badge bg-danger px-3 py-2">~£60m</span>
+                        <p class="mt-3 text-muted small fav-desc">
+                            One of Europe's best goalkeepers. His reflexes and distribution would make him a long-term No.1 between the sticks at Old Trafford.
+                        </p>
+                    </div>
+                </div>
+ 
+                <!-- Slide 5 -->
+                <div class="carousel-item">
+                    <div class="fav-transfer-card text-center p-4">
+                        <div class="fav-player-img-wrapper mx-auto mb-3">
+                            <img src="{% static 'transfers/assets/olise.jpg' %}" alt="Olise" class="fav-player-img">
+                        </div>
+                        <h4 class="fw-bold">Michael Olise</h4>
+                        <p class="text-muted mb-1">Bayern Munich · Midfielder · 23</p>
+                        <span class="badge bg-danger px-3 py-2">~£55m</span>
+                        <p class="mt-3 text-muted small fav-desc">
+                            Exciting French-born winger with explosive dribbling and a deadly left foot. United were interested before his Bayern move.
+                        </p>
+                    </div>
+                </div>
+ 
+            </div>
+ 
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#favTransfersCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#favTransfersCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+</section>
+ 
+<!-- ===================== SUBMIT FORM (Red+ only) ===================== -->
+{% if can_submit %}
+<section class="container my-5">
+    <div class="section-box">
+        <h3 class="text-center mb-2 fw-bold">Submit a Transfer Rumour</h3>
+        <p class="text-center text-muted mb-4">
+            All submissions are reviewed by our admin team before going live.
+        </p>
+ 
+        {% if messages %}
+        <div class="mb-3">
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} alert-dismissible fade show" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+ 
+        <form method="POST" class="row g-3" id="rumourForm">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Player Name</label>
+                {{ form.player_name }}
+                {% if form.player_name.errors %}
+                <div class="text-danger small">{{ form.player_name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Current Club</label>
+                {{ form.current_club }}
+                {% if form.current_club.errors %}
+                <div class="text-danger small">{{ form.current_club.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Position</label>
+                {{ form.position }}
+                {% if form.position.errors %}
+                <div class="text-danger small">{{ form.position.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Age</label>
+                {{ form.age }}
+                {% if form.age.errors %}
+                <div class="text-danger small">{{ form.age.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Transfer Fee</label>
+                {{ form.fee }}
+                {% if form.fee.errors %}
+                <div class="text-danger small">{{ form.fee.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-semibold">Source URL <span class="text-muted fw-normal">(optional)</span></label>
+                {{ form.source }}
+                {% if form.source.errors %}
+                <div class="text-danger small">{{ form.source.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-semibold">
+                    Likelihood: <span id="likelihoodValue" class="text-danger">5</span>/10
+                </label>
+                {{ form.likelihood }}
+                <div class="d-flex justify-content-between small text-muted mt-1">
+                    <span>1 — Unlikely</span>
+                    <span>10 — Done Deal</span>
+                </div>
+                {% if form.likelihood.errors %}
+                <div class="text-danger small">{{ form.likelihood.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 text-center mt-3">
+                <button type="submit" class="btn btn-danger px-5">Submit Rumour</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% elif user.is_authenticated %}
+<!-- Logged in but free tier -->
+<section class="container my-5">
+    <div class="section-box text-center py-5">
+        <i class="bi bi-lock-fill fs-1 text-danger mb-3"></i>
+        <h4 class="fw-bold">Red Membership Required</h4>
+        <p class="text-muted">Upgrade to a Red or Gold membership to submit transfer rumours.</p>
+        <a href="#membership" class="btn btn-danger">View Membership Plans</a>
+    </div>
+</section>
+{% else %}
+<!-- Not logged in -->
+<section class="container my-5">
+    <div class="section-box text-center py-5">
+        <i class="bi bi-person-lock fs-1 text-danger mb-3"></i>
+        <h4 class="fw-bold">Sign In to Submit Rumours</h4>
+        <p class="text-muted">Red and Gold members can submit their own transfer sources.</p>
+        <a href="{% url 'register:login' %}" class="btn btn-danger me-2">Login</a>
+        <a href="{% url 'register:register' %}" class="btn btn-outline-danger">Register</a>
+    </div>
+</section>
+{% endif %}
+ 
+<!-- ===================== RUMOURS TABLE ===================== -->
+<section class="container my-5">
+    <div class="section-box">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <h3 class="fw-bold mb-0">Latest Rumours</h3>
+ 
+            <!-- Filter & Sort -->
+            <form method="GET" class="d-flex gap-2 flex-wrap align-items-center">
+                <select name="position" class="form-select form-select-sm" style="width:150px;" onchange="this.form.submit()">
+                    <option value="" {% if not position_filter %}selected{% endif %}>All Positions</option>
+                    <option value="GK" {% if position_filter == 'GK' %}selected{% endif %}>Goalkeeper</option>
+                    <option value="DEF" {% if position_filter == 'DEF' %}selected{% endif %}>Defender</option>
+                    <option value="MID" {% if position_filter == 'MID' %}selected{% endif %}>Midfielder</option>
+                    <option value="FWD" {% if position_filter == 'FWD' %}selected{% endif %}>Forward</option>
+                </select>
+                <select name="sort" class="form-select form-select-sm" style="width:180px;" onchange="this.form.submit()">
+                    <option value="-likelihood" {% if sort_by == '-likelihood' %}selected{% endif %}>Highest Likelihood</option>
+                    <option value="likelihood" {% if sort_by == 'likelihood' %}selected{% endif %}>Lowest Likelihood</option>
+                    <option value="player_name" {% if sort_by == 'player_name' %}selected{% endif %}>Player Name (A–Z)</option>
+                    <option value="-submitted_at" {% if sort_by == '-submitted_at' %}selected{% endif %}>Newest First</option>
+                </select>
+            </form>
+        </div>
+ 
+        {% if rumours %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th>
+                        <th>Club</th>
+                        <th>Pos</th>
+                        <th>Age</th>
+                        <th>Fee</th>
+                        <th>Likelihood</th>
+                        <th>Source</th>
+                        <th>Submitted By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rumour in rumours %}
+                    <tr>
+                        <td class="fw-semibold">{{ rumour.player_name }}</td>
+                        <td>{{ rumour.current_club }}</td>
+                        <td>
+                            <span class="badge
+                                {% if rumour.position == 'GK' %}bg-purple
+                                {% elif rumour.position == 'DEF' %}bg-primary
+                                {% elif rumour.position == 'MID' %}bg-success
+                                {% else %}bg-danger{% endif %}">
+                                {{ rumour.position }}
+                            </span>
+                        </td>
+                        <td>{{ rumour.age }}</td>
+                        <td>{{ rumour.fee }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="likelihood-bar-bg">
+                                    <div class="likelihood-bar" style="width:{{ rumour.likelihood }}0%"
+                                         data-score="{{ rumour.likelihood }}"></div>
+                                </div>
+                                <span class="fw-bold text-danger">{{ rumour.likelihood }}/10</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if rumour.source %}
+                            <a href="{{ rumour.source }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-link-45deg"></i>
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ rumour.submitted_by.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <p class="text-muted">No approved rumours yet.
+                {% if can_submit %}Be the first to submit one!{% endif %}
+            </p>
+        </div>
+        {% endif %}
+ 
+        {% if user.is_authenticated and user.profile.is_red_or_above %}
+        <div class="text-end mt-3">
+            <a href="{% url 'transfers:my_rumours' %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-list-ul me-1"></i>My Submissions
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'transfers/js/transfers.js' %}"></script>
+{% endblock %}

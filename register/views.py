@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
  
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, EditProfileForm
+from django.contrib.auth.decorators import login_required
 from .models import Profile
+
  
  
 # ──────────────────────────────────────────────
@@ -164,7 +166,6 @@ def logout_view(request):
 # ──────────────────────────────────────────────
 def admin_dashboard(request):
     from .decorators import admin_required
-    # Manually apply check here so we can return a proper response
     if not request.user.is_authenticated:
         messages.error(request, 'Please log in.')
         return redirect('register:login')
@@ -175,12 +176,116 @@ def admin_dashboard(request):
     except Profile.DoesNotExist:
         messages.error(request, 'Access denied.')
         return redirect('core:home')
- 
-    total_users = User.objects.count()
-    recent_users = User.objects.order_by('-date_joined')[:10]
- 
+
+    all_users = User.objects.select_related('profile').order_by('-date_joined')
+    total_users = all_users.count()
+
+    role_counts = {
+        'free':  Profile.objects.filter(role='free').count(),
+        'red':   Profile.objects.filter(role='red').count(),
+        'gold':  Profile.objects.filter(role='gold').count(),
+        'admin': Profile.objects.filter(role='admin').count(),
+    }
+
+    try:
+        from transfers.models import TransferRumour
+        pending_rumours = TransferRumour.objects.filter(status='pending').count()
+        recent_rumours  = TransferRumour.objects.filter(status='pending').order_by('-submitted_at')[:5]
+    except Exception:
+        pending_rumours = 0
+        recent_rumours  = []
+
+    try:
+        from catalogue.models import Product
+        total_products = Product.objects.count()
+    except Exception:
+        total_products = 0
+
     context = {
-        'total_users': total_users,
-        'recent_users': recent_users,
+        'all_users':       all_users,
+        'total_users':     total_users,
+        'role_counts':     role_counts,
+        'pending_rumours': pending_rumours,
+        'recent_rumours':  recent_rumours,
+        'total_products':  total_products,
     }
     return render(request, 'register/admin_dashboard.html', context)
+    
+def change_user_role(request, user_id):
+    if not request.user.is_authenticated:
+        return redirect('register:login')
+    try:
+        if not request.user.profile.is_admin():
+            messages.error(request, 'Access denied.')
+            return redirect('core:home')
+    except Profile.DoesNotExist:
+        return redirect('core:home')
+
+    if request.method == 'POST':
+        target_user = get_object_or_404(User, pk=user_id)
+        new_role = request.POST.get('role')
+        if new_role in ('free', 'red', 'gold', 'admin'):
+            profile, _ = Profile.objects.get_or_create(user=target_user)
+            profile.role = new_role
+            profile.save()
+            messages.success(request, f"{target_user.username}'s role updated to {new_role}.")
+        else:
+            messages.error(request, 'Invalid role.')
+
+    return redirect('register:admin_dashboard')
+
+
+@login_required(login_url='/login/')
+def profile_dashboard(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+ 
+    # Pull in ratings and wishlist counts when those apps exist
+    # For now we query safely with try/except
+    try:
+        from catalogue.models import Product
+        wishlist_count = request.user.wishlist_items.count() if hasattr(request.user, 'wishlist_items') else 0
+    except Exception:
+        wishlist_count = 0
+ 
+    try:
+        ratings_count = request.user.playerrating_set.count()
+    except Exception:
+        ratings_count = 0
+ 
+    try:
+        reviews_count = request.user.productreview_set.count()
+    except Exception:
+        reviews_count = 0
+ 
+    context = {
+        'profile':        profile,
+        'wishlist_count': wishlist_count,
+        'ratings_count':  ratings_count,
+        'reviews_count':  reviews_count,
+    }
+    return render(request, 'register/profile_dashboard.html', context)
+ 
+ 
+# ──────────────────────────────────────────────
+# EDIT PROFILE
+# ──────────────────────────────────────────────
+@login_required(login_url='/login/')
+def edit_profile(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+ 
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
+        if form.is_valid():
+            # Save profile fields
+            form.save()
+            # Save User model fields separately
+            request.user.first_name = form.cleaned_data.get('first_name', '')
+            request.user.last_name  = form.cleaned_data.get('last_name', '')
+            request.user.email      = form.cleaned_data.get('email', request.user.email)
+            request.user.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('register:profile_dashboard')
+    else:
+        form = EditProfileForm(instance=profile, user=request.user)
+ 
+    return render(request, 'register/edit_profile.html', {'form': form})

@@ -1,0 +1,214 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}Moderate Transfers — Admin{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+    <div class="section-box">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h3 class="fw-bold mb-0">
+                <i class="bi bi-shield-check text-danger me-2"></i>Transfer Rumour Moderation
+            </h3>
+            <a href="{% url 'register:admin_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Admin Dashboard
+            </a>
+        </div>
+ 
+        {% if messages %}
+        <div class="mb-3">
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+                {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+ 
+        <!-- Pending -->
+        <h5 class="fw-bold mb-3 text-warning">
+            <i class="bi bi-clock-fill me-1"></i>Pending ({{ pending.count }})
+        </h5>
+        {% if pending %}
+        <div class="table-responsive mb-5">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th>
+                        <th>Club</th>
+                        <th>Pos</th>
+                        <th>Age</th>
+                        <th>Fee</th>
+                        <th>Likelihood</th>
+                        <th>Submitted By</th>
+                        <th>Source</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rumour in pending %}
+                    <tr>
+                        <td class="fw-semibold">{{ rumour.player_name }}</td>
+                        <td>{{ rumour.current_club }}</td>
+                        <td>{{ rumour.position }}</td>
+                        <td>{{ rumour.age }}</td>
+                        <td>{{ rumour.fee }}</td>
+                        <td>{{ rumour.likelihood }}/10</td>
+                        <td>{{ rumour.submitted_by.username }}</td>
+                        <td>
+                            {% if rumour.source %}
+                            <a href="{{ rumour.source }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-link-45deg"></i>
+                            </a>
+                            {% else %}—{% endif %}
+                        </td>
+                        <td class="text-muted small">{{ rumour.submitted_at|date:"d M Y" }}</td>
+                        <td>
+                            <div class="d-flex gap-1 flex-wrap">
+                                <!-- Approve -->
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="rumour_id" value="{{ rumour.pk }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                </form>
+                                <!-- Reject with note -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#rejectModal{{ rumour.pk }}">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <!-- Delete -->
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="rumour_id" value="{{ rumour.pk }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Delete permanently?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+ 
+                            <!-- Reject Modal -->
+                            <div class="modal fade" id="rejectModal{{ rumour.pk }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="rumour_id" value="{{ rumour.pk }}">
+                                            <input type="hidden" name="action" value="reject">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Reject: {{ rumour.player_name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label class="form-label">Reason (optional — shown to submitter)</label>
+                                                <textarea name="admin_note" class="form-control" rows="3"
+                                                          placeholder="e.g. No credible source provided"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-5">No pending rumours.</p>
+        {% endif %}
+ 
+        <!-- Approved -->
+        <h5 class="fw-bold mb-3 text-success">
+            <i class="bi bi-check-circle-fill me-1"></i>Approved ({{ approved.count }})
+        </h5>
+        {% if approved %}
+        <div class="table-responsive mb-5">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th><th>Club</th><th>Pos</th><th>Likelihood</th><th>Submitted By</th><th>Date</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rumour in approved %}
+                    <tr>
+                        <td class="fw-semibold">{{ rumour.player_name }}</td>
+                        <td>{{ rumour.current_club }}</td>
+                        <td>{{ rumour.position }}</td>
+                        <td>{{ rumour.likelihood }}/10</td>
+                        <td>{{ rumour.submitted_by.username }}</td>
+                        <td class="text-muted small">{{ rumour.submitted_at|date:"d M Y" }}</td>
+                        <td>
+                            <form method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="rumour_id" value="{{ rumour.pk }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Delete this approved rumour?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-5">No approved rumours.</p>
+        {% endif %}
+ 
+        <!-- Rejected -->
+        <h5 class="fw-bold mb-3 text-danger">
+            <i class="bi bi-x-circle-fill me-1"></i>Rejected ({{ rejected.count }})
+        </h5>
+        {% if rejected %}
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th><th>Club</th><th>Submitted By</th><th>Admin Note</th><th>Date</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rumour in rejected %}
+                    <tr>
+                        <td class="fw-semibold">{{ rumour.player_name }}</td>
+                        <td>{{ rumour.current_club }}</td>
+                        <td>{{ rumour.submitted_by.username }}</td>
+                        <td class="text-muted small">{{ rumour.admin_note|default:"—" }}</td>
+                        <td class="text-muted small">{{ rumour.submitted_at|date:"d M Y" }}</td>
+                        <td>
+                            <form method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="rumour_id" value="{{ rumour.pk }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Delete permanently?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No rejected rumours.</p>
+        {% endif %}
+ 
+    </div>
+</section>
+{% endblock %}

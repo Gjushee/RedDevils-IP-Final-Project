@@ -1,0 +1,81 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block title %}My Submissions — Red Devils Hub{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+    <div class="section-box">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h3 class="fw-bold mb-0">My Transfer Submissions</h3>
+            <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back to Transfers
+            </a>
+        </div>
+ 
+        {% if messages %}
+        <div class="mb-3">
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+                {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+ 
+        {% if rumours %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th>
+                        <th>Club</th>
+                        <th>Pos</th>
+                        <th>Likelihood</th>
+                        <th>Status</th>
+                        <th>Admin Note</th>
+                        <th>Submitted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rumour in rumours %}
+                    <tr>
+                        <td class="fw-semibold">{{ rumour.player_name }}</td>
+                        <td>{{ rumour.current_club }}</td>
+                        <td>{{ rumour.position }}</td>
+                        <td>{{ rumour.likelihood }}/10</td>
+                        <td>
+                            {% if rumour.status == 'approved' %}
+                            <span class="badge bg-success">Approved</span>
+                            {% elif rumour.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ rumour.admin_note|default:"—" }}</td>
+                        <td class="text-muted small">{{ rumour.submitted_at|date:"d M Y" }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'transfers:delete_rumour' rumour.pk %}" onsubmit="return confirm('Delete this rumour?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+            <p class="text-muted">You haven't submitted any rumours yet.</p>
+            <a href="{% url 'transfers:transfers' %}" class="btn btn-danger">Submit Your First Rumour</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

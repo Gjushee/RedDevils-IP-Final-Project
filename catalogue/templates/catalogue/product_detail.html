@@ -1,11 +1,11 @@
 {% extends "core/base.html" %}
 {% load static %}
- 
+
 {% block title %}{{ product.name }} — Red Devils Hub{% endblock %}
- 
+
 {% block content %}
 <section class="container my-5">
- 
+
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
@@ -18,10 +18,10 @@
             <li class="breadcrumb-item active">{{ product.name }}</li>
         </ol>
     </nav>
- 
+
     <div class="section-box">
         <div class="row g-5">
- 
+
             <!-- Product Images -->
             <div class="col-md-5">
                 {% if product.primary_image %}
@@ -35,7 +35,7 @@
                     <i class="bi bi-image text-muted" style="font-size:5rem;"></i>
                 </div>
                 {% endif %}
- 
+
                 <!-- Thumbnail gallery -->
                 {% if product.images.count > 1 %}
                 <div class="d-flex gap-2 mt-3 flex-wrap">
@@ -47,10 +47,10 @@
                 </div>
                 {% endif %}
             </div>
- 
+
             <!-- Product Info -->
             <div class="col-md-7">
- 
+
                 <!-- Access badge -->
                 {% if product.access_level == 'gold' %}
                 <span class="badge mb-2 px-3 py-2"
@@ -60,21 +60,21 @@
                 {% elif product.access_level == 'red' %}
                 <span class="badge bg-danger mb-2 px-3 py-2">Red Member+</span>
                 {% endif %}
- 
+
                 <small class="text-muted d-block mb-1">
                     {{ product.subcategory.category.name }} › {{ product.subcategory.name }}
                 </small>
- 
+
                 <h2 class="fw-bold mb-2">{{ product.name }}</h2>
- 
+
                 {% if product.player %}
                 <p class="text-danger fw-semibold mb-3">
                     <i class="bi bi-person-fill me-1"></i>{{ product.player.name }} Collection
                 </p>
                 {% endif %}
- 
+
                 <h3 class="fw-bold text-danger mb-3">£{{ product.price }}</h3>
- 
+
                 <!-- Product Meta -->
                 <div class="row g-2 mb-4">
                     {% if product.size %}
@@ -106,7 +106,7 @@
                     </div>
                     {% endif %}
                 </div>
- 
+
                 <!-- Stock Status -->
                 <div class="mb-3">
                     {% if product.is_in_stock %}
@@ -119,22 +119,35 @@
                     </span>
                     {% endif %}
                 </div>
- 
+
                 {% if product.description %}
                 <p class="text-muted mb-4">{{ product.description }}</p>
                 {% endif %}
- 
+
                 <!-- Action Buttons -->
                 {% if user.is_authenticated %}
                     {% if product.is_in_stock %}
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="#" class="btn btn-danger btn-lg px-5">
+                    <form method="POST" action="{% url 'cart:add_to_cart' product.pk %}"
+                          class="d-flex gap-3 flex-wrap align-items-end" id="addToCartForm">
+                        {% csrf_token %}
+                        {% if product.size %}
+                        <div>
+                            <label class="form-label small fw-semibold">Size</label>
+                            <select name="size" class="form-select form-select-sm" style="width:100px;">
+                                <option value="{{ product.size }}">{{ product.size }}</option>
+                            </select>
+                        </div>
+                        {% else %}
+                        <input type="hidden" name="size" value="">
+                        {% endif %}
+                        <button type="submit" class="btn btn-danger btn-lg px-5" id="addToCartBtn">
                             <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                        </a>
+                        </button>
                         <a href="#" class="btn btn-outline-danger btn-lg">
                             <i class="bi bi-heart me-1"></i>Wishlist
                         </a>
-                    </div>
+                    </form>
+                    <div id="addToCartMsg" class="mt-2" style="display:none;"></div>
                     {% else %}
                     <button class="btn btn-secondary btn-lg px-5" disabled>Out of Stock</button>
                     {% endif %}
@@ -145,11 +158,11 @@
                     to add this item to your cart or wishlist.
                 </div>
                 {% endif %}
- 
+
             </div>
         </div>
     </div>
- 
+
     <!-- Related Products -->
     {% if related %}
     <div class="section-box mt-4">
@@ -181,6 +194,12 @@
         </div>
     </div>
     {% endif %}
- 
+
 </section>
+{% endblock %}
+
+{% block extra_js %}
+{% if user.is_authenticated %}
+<script src="{% static 'catalogue/js/product_detail.js' %}"></script>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,232 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Checkout — Red Devils Hub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <h3 class="fw-bold mb-0"><i class="bi bi-bag-check text-danger me-2"></i>Checkout</h3>
+        <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Cart
+        </a>
+    </div>
+
+    <div class="alert alert-warning d-flex align-items-center gap-2 mb-4">
+        <i class="bi bi-info-circle-fill fs-5"></i>
+        <span><strong>Demo Store:</strong> No real payments are processed. Use any card number for the demo.</span>
+    </div>
+
+    <form method="POST" id="checkoutForm">
+        {% csrf_token %}
+        <div class="row g-4">
+
+            <div class="col-lg-7">
+
+                <!-- Contact Details -->
+                <div class="checkout-panel mb-4">
+                    <div class="checkout-panel-header"><i class="bi bi-person-fill me-2"></i>Contact Details</div>
+                    <div class="checkout-panel-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}<div class="text-danger small">{{ form.full_name.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Phone <span class="text-muted fw-normal">(optional)</span></label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="checkout-panel mb-4">
+                    <div class="checkout-panel-header"><i class="bi bi-geo-alt-fill me-2"></i>Billing Address</div>
+                    <div class="checkout-panel-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Address Line 1</label>
+                                {{ form.address_line1 }}
+                                {% if form.address_line1.errors %}<div class="text-danger small">{{ form.address_line1.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Address Line 2 <span class="text-muted fw-normal">(optional)</span></label>
+                                {{ form.address_line2 }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">City</label>
+                                {{ form.city }}
+                                {% if form.city.errors %}<div class="text-danger small">{{ form.city.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Postcode</label>
+                                {{ form.postcode }}
+                                {% if form.postcode.errors %}<div class="text-danger small">{{ form.postcode.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Country</label>
+                                {{ form.country }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment -->
+                <div class="checkout-panel">
+                    <div class="checkout-panel-header"><i class="bi bi-credit-card-fill me-2"></i>Payment Method</div>
+                    <div class="checkout-panel-body">
+                        <div class="payment-tabs mb-4">
+                            <button type="button" class="payment-tab active" id="tabCard" onclick="switchTab('card')">
+                                <i class="bi bi-credit-card me-1"></i>Card
+                            </button>
+                            {% if paypal_client_id %}
+                            <button type="button" class="payment-tab" id="tabPaypal" onclick="switchTab('paypal')">
+                                <i class="bi bi-paypal me-1"></i>PayPal
+                            </button>
+                            {% endif %}
+                        </div>
+
+                        <div id="cardPanel">
+                            <div class="card-preview mb-4">
+                                <div class="card-preview-chip"></div>
+                                <div class="card-preview-number" id="previewNumber">•••• •••• •••• ••••</div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <div class="card-preview-label">Card Holder</div>
+                                        <div class="card-preview-value" id="previewName">YOUR NAME</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="card-preview-label">Expires</div>
+                                        <div class="card-preview-value" id="previewExpiry">MM/YY</div>
+                                    </div>
+                                    <div class="card-brand-logo" id="cardBrandLogo">
+                                        <i class="bi bi-credit-card fs-3"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Cardholder Name</label>
+                                    {{ form.card_name }}
+                                    {% if form.card_name.errors %}<div class="text-danger small">{{ form.card_name.errors }}</div>{% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Card Number</label>
+                                    {{ form.card_number }}
+                                    {% if form.card_number.errors %}<div class="text-danger small">{{ form.card_number.errors }}</div>{% endif %}
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold">Expiry Date</label>
+                                    {{ form.expiry }}
+                                    {% if form.expiry.errors %}<div class="text-danger small">{{ form.expiry.errors }}</div>{% endif %}
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold">CVV</label>
+                                    <div class="input-group">
+                                        {{ form.cvv }}
+                                        <button type="button" class="btn btn-outline-secondary" id="cvvToggle">
+                                            <i class="bi bi-eye" id="cvvEyeIcon"></i>
+                                        </button>
+                                    </div>
+                                    {% if form.cvv.errors %}<div class="text-danger small">{{ form.cvv.errors }}</div>{% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-danger w-100 py-3 fw-bold fs-5" id="payCardBtn">
+                                    <i class="bi bi-lock-fill me-2"></i>Pay £{{ cart.total_price }}
+                                </button>
+                            </div>
+                        </div>
+
+                        {% if paypal_client_id %}
+                        <div id="paypalPanel" style="display:none;">
+                            <p class="text-muted small mb-3">Fill in your billing address above, then click the PayPal button.</p>
+                            <div id="paypal-button-container"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-5">
+                <div class="checkout-panel sticky-top" style="top:80px;">
+                    <div class="checkout-panel-header"><i class="bi bi-receipt me-2"></i>Order Summary</div>
+                    <div class="checkout-panel-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for item in items %}
+                            <li class="list-group-item px-3 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if item.product.primary_image %}
+                                        <img src="{{ item.product.primary_image.image.url }}" alt="{{ item.product.name }}"
+                                             class="rounded" style="width:40px;height:40px;object-fit:cover;">
+                                        {% endif %}
+                                        <div>
+                                            <div class="small fw-semibold">{{ item.product.name }}</div>
+                                            <div class="text-muted" style="font-size:0.75rem;">
+                                                Qty: {{ item.quantity }}{% if item.size %} · {{ item.size }}{% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="fw-semibold text-danger">£{{ item.line_total }}</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Subtotal</span><span>£{{ cart.total_price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Delivery</span>
+                                <span class="text-success fw-semibold">Free</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between fw-bold fs-5">
+                                <span>Total</span>
+                                <span class="text-danger">£{{ cart.total_price }}</span>
+                            </div>
+                        </div>
+                        <div class="border-top p-3 d-flex justify-content-center gap-3 text-muted small">
+                            <span><i class="bi bi-shield-lock-fill text-success me-1"></i>SSL Secure</span>
+                            <span><i class="bi bi-lock-fill text-success me-1"></i>Encrypted</span>
+                            <span><i class="bi bi-patch-check-fill text-success me-1"></i>Safe Checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'checkout/js/checkout.js' %}"></script>
+{% if paypal_client_id %}
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=GBP"></script>
+<script>
+    const PAYPAL_CREATE_URL  = "{% url 'checkout:paypal_create' %}";
+    const PAYPAL_CAPTURE_URL = "{% url 'checkout:paypal_capture' %}";
+    const SAVE_BILLING_URL   = "{% url 'checkout:save_billing' %}";
+    const CSRF_TOKEN         = "{{ csrf_token }}";
+</script>
+<script src="{% static 'checkout/js/paypal.js' %}"></script>
+{% endif %}
+{% endblock %}

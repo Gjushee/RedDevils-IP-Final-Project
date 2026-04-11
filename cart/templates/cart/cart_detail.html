@@ -1,0 +1,143 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Your Cart — Red Devils Hub{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+        <h3 class="fw-bold mb-0"><i class="bi bi-cart3 text-danger me-2"></i>Your Cart</h3>
+        <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Continue Shopping
+        </a>
+    </div>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+        {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if items %}
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+            <div class="section-box p-0 overflow-hidden">
+                {% for item in items %}
+                <div class="cart-item-row d-flex gap-3 align-items-center p-3
+                    {% if not forloop.last %}border-bottom{% endif %}"
+                    id="cart-row-{{ item.pk }}">
+
+                    <a href="{% url 'catalogue:product_detail' item.product.slug %}">
+                        {% if item.product.primary_image %}
+                        <img src="{{ item.product.primary_image.image.url }}"
+                             alt="{{ item.product.name }}"
+                             class="cart-item-img rounded">
+                        {% else %}
+                        <div class="cart-item-img-placeholder rounded d-flex align-items-center justify-content-center bg-light">
+                            <i class="bi bi-image text-muted fs-3"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+
+                    <div class="flex-grow-1 min-w-0">
+                        <a href="{% url 'catalogue:product_detail' item.product.slug %}"
+                           class="fw-semibold text-decoration-none text-body d-block text-truncate">
+                            {{ item.product.name }}
+                        </a>
+                        {% if item.size and item.size != '—' %}
+                        <small class="text-muted">Size: {{ item.size }}</small>
+                        {% endif %}
+                        <div class="text-danger fw-bold mt-1">£{{ item.product.price }}</div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <form method="POST" action="{% url 'cart:update_quantity' item.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm cart-qty-btn">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                        </form>
+
+                        <span class="cart-qty-display fw-bold">{{ item.quantity }}</span>
+
+                        <form method="POST" action="{% url 'cart:update_quantity' item.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm cart-qty-btn">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="fw-bold text-end" style="min-width:70px;">
+                        £{{ item.line_total }}
+                    </div>
+
+                    <form method="POST" action="{% url 'cart:remove_item' item.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Remove this item?')">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-end mt-3">
+                <form method="POST" action="{% url 'cart:clear_cart' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('Clear your entire cart?')">
+                        <i class="bi bi-trash3 me-1"></i>Clear Cart
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="section-box">
+                <h5 class="fw-bold mb-4">Order Summary</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Items ({{ cart.total_items }})</span>
+                    <span class="fw-semibold">£{{ cart.total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Delivery</span>
+                    <span class="text-success fw-semibold">Free</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fw-bold fs-5">Total</span>
+                    <span class="fw-bold fs-5 text-danger">£{{ cart.total_price }}</span>
+                </div>
+                <a href="{% url 'checkout:checkout' %}" class="btn btn-danger w-100 py-3 fw-bold">
+                    <i class="bi bi-lock-fill me-2"></i>Proceed to Checkout
+                </a>
+                <p class="text-muted text-center small mt-2">
+                    This is a demo store — no real payments are processed.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    {% else %}
+    <div class="section-box text-center py-5">
+        <i class="bi bi-cart-x fs-1 text-muted mb-3 d-block"></i>
+        <h5 class="fw-bold">Your cart is empty</h5>
+        <p class="text-muted">Browse the catalogue and add some items!</p>
+        <a href="{% url 'catalogue:catalogue' %}" class="btn btn-danger px-5">
+            <i class="bi bi-bag me-2"></i>Shop Now
+        </a>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}

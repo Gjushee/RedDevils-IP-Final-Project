@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "catalogue", 
     "matches",
     "transfers",  
+    "cart", 
+    "checkout",
 ]
  
 MIDDLEWARE = [
@@ -137,3 +139,8 @@ LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@reddevilshub.com'
+
+
+PAYPAL_CLIENT_ID     = ''
+PAYPAL_CLIENT_SECRET = ''
+PAYPAL_MODE          = 'sandbox'    

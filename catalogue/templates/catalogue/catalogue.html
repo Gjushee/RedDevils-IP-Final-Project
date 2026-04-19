@@ -1,8 +1,8 @@
 {% extends "core/base.html" %}
-{% load static %}
- 
+{% load static catalogue_extras %}
+
 {% block title %}Catalogue — Red Devils Hub{% endblock %}
- 
+
 {% block extra_css %}
 <style>
     .filter-sidebar { position: sticky; top: 90px; }
@@ -13,10 +13,10 @@
     .active-filter { background: #dc3545; color: white; border-radius: 20px; padding: 3px 10px; font-size: 13px; }
 </style>
 {% endblock %}
- 
+
 {% block content %}
 <section class="container my-5">
- 
+
     <!-- Page Header -->
     <div class="section-box mb-4">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -45,18 +45,67 @@
             </div>
         </div>
     </div>
- 
+
+    <!-- ═══════════════ RECOMMENDED FOR YOU ═══════════════ -->
+    {% if recommended %}
+    <div class="section-box mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-stars text-warning me-2"></i>Recommended For You
+            </h5>
+            <form method="POST" action="{% url 'catalogue:clear_viewed' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i>Clear History
+                </button>
+            </form>
+        </div>
+        <div class="row g-3">
+            {% for product in recommended %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    {% if product.primary_image %}
+                    <img src="{{ product.primary_image.image.url }}"
+                         alt="{{ product.name }}" class="card-img-top"
+                         style="height:160px; object-fit:cover; border-radius:12px 12px 0 0;">
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light"
+                         style="height:160px; border-radius:12px 12px 0 0;">
+                        <i class="bi bi-image text-muted" style="font-size:2rem;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body p-2">
+                        <p class="card-title fw-semibold small mb-1">{{ product.name }}</p>
+                        <span class="price-tag" style="font-size:1rem;">
+                            {% if is_gold %}
+                                £{{ product.price|discounted:discount_pct }}
+                            {% else %}
+                                £{{ product.price }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-2 px-2">
+                        <a href="{% url 'catalogue:product_detail' product.slug %}"
+                           class="btn btn-outline-danger btn-sm w-100">View</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="row g-4">
- 
+
         <!-- ═══════════════ FILTER SIDEBAR ═══════════════ -->
         <div class="col-lg-3">
             <div class="section-box filter-sidebar">
                 <h6 class="fw-bold mb-3">
                     <i class="bi bi-funnel-fill text-danger me-2"></i>Search & Filter
                 </h6>
- 
+
                 <form method="GET" action="{% url 'catalogue:catalogue' %}">
- 
+
                     <!-- Basic Search -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Search</label>
@@ -69,9 +118,9 @@
                         </div>
                         <div class="form-text">Search by product name or player</div>
                     </div>
- 
+
                     <hr>
- 
+
                     <!-- Category -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Category</label>
@@ -84,7 +133,7 @@
                             {% endfor %}
                         </select>
                     </div>
- 
+
                     <!-- Subcategory -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Subcategory</label>
@@ -102,7 +151,7 @@
                             {% endfor %}
                         </select>
                     </div>
- 
+
                     <!-- Player / Collection -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Player / Collection</label>
@@ -115,7 +164,7 @@
                             {% endfor %}
                         </select>
                     </div>
- 
+
                     <!-- Price Range -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Price Range (£)</label>
@@ -126,7 +175,7 @@
                                    placeholder="Max" value="{{ price_max }}" min="0" step="0.01">
                         </div>
                     </div>
- 
+
                     <!-- Size -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Size</label>
@@ -139,7 +188,7 @@
                             {% endfor %}
                         </select>
                     </div>
- 
+
                     <!-- Colour -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Colour</label>
@@ -152,7 +201,7 @@
                             {% endfor %}
                         </select>
                     </div>
- 
+
                     <!-- In Stock Only -->
                     <div class="mb-3">
                         <div class="form-check">
@@ -163,7 +212,7 @@
                             </label>
                         </div>
                     </div>
- 
+
                     <!-- Membership Access -->
                     {% if user.is_authenticated %}
                     <div class="mb-3">
@@ -176,25 +225,25 @@
                         </select>
                     </div>
                     {% endif %}
- 
+
                     <button type="submit" class="btn btn-danger w-100 btn-sm">Apply Filters</button>
                     <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-secondary w-100 btn-sm mt-2">
                         Clear All
                     </a>
- 
+
                 </form>
             </div>
         </div>
- 
+
         <!-- ═══════════════ PRODUCT GRID ═══════════════ -->
         <div class="col-lg-9">
- 
+
             {% if products %}
             <div class="row g-4">
                 {% for product in products %}
                 <div class="col-md-6 col-xl-4">
                     <div class="card h-100 border-0 shadow-sm product-card">
- 
+
                         <!-- Access badge -->
                         {% if product.access_level == 'gold' %}
                         <span class="badge product-card badge-access"
@@ -204,7 +253,7 @@
                         {% elif product.access_level == 'red' %}
                         <span class="badge bg-danger product-card badge-access">Red+</span>
                         {% endif %}
- 
+
                         <!-- Product Image -->
                         {% if product.primary_image %}
                         <img src="{{ product.primary_image.image.url }}"
@@ -215,46 +264,62 @@
                             <i class="bi bi-image text-muted" style="font-size:3rem;"></i>
                         </div>
                         {% endif %}
- 
+
                         <div class="card-body d-flex flex-column">
                             <!-- Category breadcrumb -->
                             <small class="text-muted mb-1">
                                 {{ product.subcategory.category.name }} › {{ product.subcategory.name }}
                             </small>
- 
+
                             <h6 class="card-title fw-bold mb-1">{{ product.name }}</h6>
- 
+
                             {% if product.player %}
                             <small class="text-danger mb-2">
                                 <i class="bi bi-person-fill me-1"></i>{{ product.player.name }}
                             </small>
                             {% endif %}
- 
+
                             <div class="d-flex align-items-center justify-content-between mt-auto pt-2">
+                                {% if is_gold %}
+                                <div>
+                                    <span class="text-muted text-decoration-line-through small">£{{ product.price }}</span><br>
+                                    <span class="price-tag">£{{ product.price|discounted:discount_pct }}</span>
+                                    <span class="badge bg-warning text-dark ms-1" style="font-size:0.65rem;">-{{ discount_pct }}%</span>
+                                </div>
+                                {% else %}
                                 <span class="price-tag">£{{ product.price }}</span>
+                                {% endif %}
                                 {% if product.is_in_stock %}
                                     <span class="badge bg-success">In Stock</span>
                                 {% else %}
                                     <span class="badge bg-secondary">Out of Stock</span>
                                 {% endif %}
                             </div>
- 
+
                             {% if product.size %}
                             <small class="text-muted mt-1">Size: {{ product.size }}</small>
                             {% endif %}
                         </div>
- 
-                        <div class="card-footer bg-transparent border-0 pb-3">
+
+                        <div class="card-footer bg-transparent border-0 pb-3 d-flex gap-2">
                             <a href="{% url 'catalogue:product_detail' product.slug %}"
-                               class="btn btn-outline-danger w-100 btn-sm">
+                               class="btn btn-outline-danger btn-sm flex-grow-1">
                                 View Details
                             </a>
+                            {% if user.is_authenticated %}
+                            <button class="btn btn-sm wishlist-toggle-btn {% if product.pk in wishlist_ids %}active text-danger{% else %}btn-outline-secondary{% endif %}"
+                                    data-product-id="{{ product.pk }}"
+                                    data-toggle-url="{% url 'cart:toggle_wishlist' product.pk %}"
+                                    title="{% if product.pk in wishlist_ids %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+                                <i class="bi {% if product.pk in wishlist_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                            </button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
- 
+
             {% else %}
             <!-- Empty State -->
             <div class="section-box text-center py-5">
@@ -266,7 +331,7 @@
                 </a>
             </div>
             {% endif %}
- 
+
         </div>
     </div>
 </section>

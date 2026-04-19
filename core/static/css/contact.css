@@ -1,0 +1,126 @@
+/* HERO */
+.contact-hero {
+    background: linear-gradient(135deg, #c40000, #7a0000);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.20);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+/* CONTACT BOX */
+.contact-box {
+    background: rgba(255,255,255,0.92);
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.10);
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.contact-box::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    height: 6px; width: 100%;
+    background: linear-gradient(90deg, #dc3545, #a00000);
+}
+
+.contact-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.14);
+}
+
+/* ICON PILL */
+.icon-pill {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: rgba(220,53,69,0.12);
+    color: #dc3545;
+    flex: 0 0 46px;
+}
+
+/* SOCIAL BUTTONS */
+.social-btn {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    text-decoration: none;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 25px rgba(0,0,0,0.14);
+}
+
+.social-fb { background: #1877f2; }
+.social-x  { background: #111827; }
+.social-ig {
+    background: radial-gradient(circle at 30% 110%,
+        #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+.social-yt { background: #ff0000; }
+
+/* MAP */
+.map-frame {
+    border: 0;
+    width: 100%; height: 260px;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+}
+
+/* FORM */
+.contact-box .form-control,
+.contact-box textarea.form-control {
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.10);
+    padding: 12px 14px;
+}
+
+.contact-box .form-control:focus,
+.contact-box textarea.form-control:focus {
+    border-color: rgba(220,53,69,0.55);
+    box-shadow: 0 0 0 0.25rem rgba(220,53,69,0.15);
+}
+
+/* MODAL */
+.modal-content { border-radius: 16px; }
+
+/* DARK MODE */
+body.dark-mode .contact-box {
+    background: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+body.dark-mode .contact-box .text-muted { color: #94a3b8 !important; }
+body.dark-mode .icon-pill { background: rgba(220,53,69,0.2); color: #ff6b6b; }
+body.dark-mode .map-frame { box-shadow: 0 10px 24px rgba(0,0,0,0.4); }
+
+body.dark-mode .modal-content {
+    background: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer { border-color: rgba(255,255,255,0.08); }
+
+body.dark-mode .list-group-item {
+    background: #0f172a;
+    color: #f1f5f9;
+    border-color: rgba(255,255,255,0.05);
+}
+
+body.dark-mode .contact-box .form-control,
+body.dark-mode .contact-box textarea.form-control {
+    background: #0f172a;
+    color: #f1f5f9;
+    border-color: rgba(255,255,255,0.1);
+}

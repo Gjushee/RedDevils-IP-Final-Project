@@ -1,17 +1,35 @@
 {% extends "core/base.html" %}
 {% load static %}
- 
+
 {% block title %}My Profile — Red Devils Hub{% endblock %}
- 
+
 {% block content %}
+
+{% if profile.role == 'admin' %}
+<div class="admin-profile-banner">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-shield-fill-check fs-3 text-white"></i>
+            <div>
+                <p class="mb-0 fw-bold text-white">You are viewing your personal profile.</p>
+                <p class="mb-0 text-white-50 small">Switch to the Admin Control Panel to manage users, moderate transfers and more.</p>
+            </div>
+        </div>
+        <a href="{% url 'register:admin_dashboard' %}" class="btn btn-light fw-semibold px-4">
+            <i class="bi bi-shield-fill me-2"></i>Go to Admin Panel
+        </a>
+    </div>
+</div>
+{% endif %}
+
 <section class="container my-5">
- 
+
     <div class="row g-4">
- 
+
         <!-- ═══════════ LEFT COLUMN — Profile Card ═══════════ -->
         <div class="col-lg-4">
             <div class="section-box text-center">
- 
+
                 <!-- Avatar -->
                 {% if profile.profile_image %}
                     <img src="{{ profile.profile_image.url }}"
@@ -24,12 +42,12 @@
                         <i class="bi bi-person-fill text-white" style="font-size:3.5rem;"></i>
                     </div>
                 {% endif %}
- 
+
                 <h4 class="fw-bold mb-0">
                     {{ profile.full_name|default:request.user.username }}
                 </h4>
                 <p class="text-muted small mb-2">@{{ request.user.username }}</p>
- 
+
                 <!-- Membership badge -->
                 {% if profile.role == 'gold' %}
                     <span class="badge px-3 py-2 mb-3"
@@ -43,9 +61,9 @@
                 {% else %}
                     <span class="badge bg-secondary px-3 py-2 mb-3">Free Member</span>
                 {% endif %}
- 
+
                 <hr>
- 
+
                 <!-- Quick info -->
                 <div class="text-start">
                     <p class="mb-2 small">
@@ -84,24 +102,27 @@
                         {% endif %}
                     </p>
                 </div>
- 
+
                 <hr>
- 
+
                 {% if profile.bio %}
                 <p class="text-muted small fst-italic">"{{ profile.bio }}"</p>
                 <hr>
                 {% endif %}
- 
-                <a href="{% url 'register:edit_profile' %}" class="btn btn-danger w-100">
+
+                <a href="{% url 'register:edit_profile' %}" class="btn btn-danger w-100 mb-2">
                     <i class="bi bi-pencil-fill me-2"></i>Edit Profile
                 </a>
- 
+                <a href="{% url 'register:change_password' %}" class="btn btn-outline-danger w-100">
+                    <i class="bi bi-key-fill me-2"></i>Change Password
+                </a>
+
             </div>
         </div>
- 
+
         <!-- ═══════════ RIGHT COLUMN — Dashboard Widgets ═══════════ -->
         <div class="col-lg-8">
- 
+
             <!-- Stats Row -->
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
@@ -126,7 +147,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <!-- Membership Details -->
             <div class="section-box mb-4">
                 <h5 class="fw-bold mb-3">
@@ -159,14 +180,13 @@
                     {% endif %}
                 </div>
             </div>
- 
+
             <!-- Feature Access -->
             <div class="section-box mb-4">
                 <h5 class="fw-bold mb-3">
                     <i class="bi bi-shield-fill text-danger me-2"></i>Your Access
                 </h5>
                 <div class="row g-2">
- 
                     <div class="col-md-6">
                         <div class="d-flex align-items-center gap-2 p-2 rounded border">
                             <i class="bi bi-check-circle-fill text-success"></i>
@@ -185,7 +205,6 @@
                             <span class="small">Wishlist &amp; cart</span>
                         </div>
                     </div>
- 
                     <div class="col-md-6">
                         <div class="d-flex align-items-center gap-2 p-2 rounded border">
                             {% if profile.is_red_or_above %}
@@ -226,10 +245,9 @@
                             <span class="small">Early access products</span>
                         </div>
                     </div>
- 
                 </div>
             </div>
- 
+
             <!-- Quick Links -->
             <div class="section-box">
                 <h5 class="fw-bold mb-3">
@@ -243,18 +261,32 @@
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a href="#" class="btn btn-outline-danger w-100">
-                            <i class="bi bi-heart me-2"></i>Wishlist
+                        <a href="{% url 'cart:wishlist_page' %}" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-heart-fill me-2"></i>Wishlist
+                            {% if wishlist_count %}<span class="badge bg-danger ms-1">{{ wishlist_count }}</span>{% endif %}
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a href="#" class="btn btn-outline-danger w-100">
+                        <a href="{% url 'checkout:order_history' %}" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-clock-history me-2"></i>Order History
+                        </a>
+                    </div>
+                    {% if profile.role == 'gold' or profile.role == 'admin' %}
+                    <div class="col-md-4">
+                        <a href="{% url 'gold_hub:gold_hub' %}" class="btn w-100 fw-bold"
+                           style="background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;">
+                            <i class="bi bi-star-fill me-2"></i>Gold Hub
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-4">
+                        <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-danger w-100">
                             <i class="bi bi-arrow-left-right me-2"></i>Transfers
                         </a>
                     </div>
                 </div>
             </div>
- 
+
         </div>
     </div>
 </section>

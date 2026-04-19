@@ -12,4 +12,5 @@ urlpatterns = [
     path("", include("transfers.urls")),
     path("", include("cart.urls")),    
     path("", include("checkout.urls")),   
+    path("", include("gold_hub.urls")),   # add this
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

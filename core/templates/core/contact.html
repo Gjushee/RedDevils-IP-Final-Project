@@ -1,0 +1,166 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Contact — Red Devils Hub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="contact-hero text-white text-center py-5">
+    <div class="container">
+        <h1 class="fw-bold mb-2">Contact Us</h1>
+        <p class="mb-0">Get in touch with the Red Devils Hub team</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row g-4 align-items-start">
+
+        <!-- LEFT: Contact Form -->
+        <div class="col-lg-7">
+            <div class="contact-box">
+                <h5 class="fw-bold mb-1">Send Us a Message</h5>
+                <p class="text-muted mb-4">Fill out the form below and we'll get back to you as soon as possible</p>
+
+                <form id="contactForm" data-url="{% url 'core:contact' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label fw-semibold">Name *</label>
+                        <input type="text" class="form-control" id="fullName" name="name"
+                               placeholder="Your full name" required minlength="3">
+                        <div class="invalid-feedback">Please enter your name (min 3 characters).</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="your.email@example.com" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="subject" class="form-label fw-semibold">Subject *</label>
+                        <input type="text" class="form-control" id="subject" name="subject"
+                               placeholder="What is this about?" required minlength="3">
+                        <div class="invalid-feedback">Please enter a subject (min 3 characters).</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" class="form-label fw-semibold">Message *</label>
+                        <textarea class="form-control" id="message" name="message"
+                                  rows="5" placeholder="Your message..."
+                                  required minlength="10"></textarea>
+                        <div class="text-end small mt-1">
+                            <span id="wordCount">0</span> / 200 words
+                        </div>
+                        <div class="invalid-feedback">
+                            Message must be at least 10 characters and no more than 200 words.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100 py-2">
+                        <i class="bi bi-send me-2"></i>Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- RIGHT: Info, Social, Map -->
+        <div class="col-lg-5">
+
+            <div class="contact-box mb-4">
+                <h6 class="fw-bold mb-3">Contact Information</h6>
+
+                <div class="d-flex gap-3 mb-3">
+                    <div class="icon-pill"><i class="bi bi-envelope"></i></div>
+                    <div>
+                        <div class="fw-semibold">Email</div>
+                        <div class="text-muted small">info@reddevilshub.com</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <div class="icon-pill"><i class="bi bi-telephone"></i></div>
+                    <div>
+                        <div class="fw-semibold">Phone</div>
+                        <div class="text-muted small">+44 161 222 0000</div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <div class="icon-pill"><i class="bi bi-geo-alt"></i></div>
+                    <div>
+                        <div class="fw-semibold">Address</div>
+                        <div class="text-muted small">
+                            Sir Matt Busby Way<br>
+                            Old Trafford, Manchester M16 0RA<br>
+                            United Kingdom
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-box mb-4">
+                <h6 class="fw-bold mb-1">Follow Us</h6>
+                <p class="text-muted small mb-3">Stay connected on social media</p>
+                <div class="d-flex gap-3">
+                    <a class="social-btn social-fb" href="https://facebook.com" target="_blank" rel="noopener">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a class="social-btn social-x" href="https://x.com" target="_blank" rel="noopener">
+                        <i class="bi bi-twitter-x"></i>
+                    </a>
+                    <a class="social-btn social-ig" href="https://instagram.com" target="_blank" rel="noopener">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a class="social-btn social-yt" href="https://youtube.com" target="_blank" rel="noopener">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-box">
+                <h6 class="fw-bold mb-3">Our Location</h6>
+                <iframe class="map-frame" loading="lazy"
+                        src="https://www.google.com/maps?q=Old%20Trafford%20Manchester%20United%20Football%20Ground&output=embed"
+                        title="Old Trafford"></iframe>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Message Sent ✅</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Thanks! We received your message:</p>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Name:</strong> <span id="cName"></span></li>
+                    <li class="list-group-item"><strong>Email:</strong> <span id="cEmail"></span></li>
+                    <li class="list-group-item"><strong>Subject:</strong> <span id="cSubject"></span></li>
+                    <li class="list-group-item"><strong>Message:</strong> <span id="cMessage"></span></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/contact.js' %}"></script>
+{% endblock %}

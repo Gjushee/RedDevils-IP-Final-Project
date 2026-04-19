@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "transfers",  
     "cart", 
     "checkout",
+    "gold_hub", 
 ]
  
 MIDDLEWARE = [
@@ -144,3 +145,5 @@ DEFAULT_FROM_EMAIL = 'noreply@reddevilshub.com'
 PAYPAL_CLIENT_ID     = ''
 PAYPAL_CLIENT_SECRET = ''
 PAYPAL_MODE          = 'sandbox'    
+
+GOLD_DISCOUNT_PERCENT = 10

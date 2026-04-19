@@ -1,10 +1,15 @@
+'use strict';
+
 (function () {
-    const offcanvas = document.getElementById('cartOffcanvas');
-    if (!offcanvas) return;
-    const SUMMARY_URL = offcanvas.dataset.summaryUrl;
-    const UPDATE_URL  = "/cart/update/";
-    const REMOVE_URL  = "/cart/remove/";
-    const CSRF        = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const SUMMARY_URL = '/cart/summary/';
+    const UPDATE_URL  = '/cart/update/';
+    const REMOVE_URL  = '/cart/remove/';
+
+    function getCsrf() {
+        if (window._cartCsrf) return window._cartCsrf;
+        const match = document.cookie.match(/csrftoken=([^;]+)/);
+        return match ? match[1] : '';
+    }
 
     function renderItems(data) {
         const list   = document.getElementById('cartItemsList');
@@ -12,23 +17,26 @@
         const badge  = document.getElementById('cartBadge');
         const total  = document.getElementById('cartTotal');
 
-        if (data.total_items > 0) {
-            badge.textContent = data.total_items;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
+        if (!list || !footer) return;
+
+        if (badge) {
+            if (data.total_items > 0) {
+                badge.textContent = data.total_items;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
         }
 
         if (data.items.length === 0) {
             list.innerHTML = `<div class="text-center py-5 text-muted">
-                <i class="bi bi-cart-x fs-1 mb-2 d-block"></i>
-                <span>Your cart is empty</span></div>`;
+                <i class="bi bi-cart-x fs-1 mb-2 d-block"></i><span>Your cart is empty</span></div>`;
             footer.style.setProperty('display', 'none', 'important');
             return;
         }
 
         footer.style.removeProperty('display');
-        total.textContent = '£' + parseFloat(data.total_price).toFixed(2);
+        if (total) total.textContent = '£' + parseFloat(data.total_price).toFixed(2);
 
         list.innerHTML = data.items.map(item => `
             <div class="cart-panel-item d-flex gap-2 align-items-center mb-3" id="panel-item-${item.id}">
@@ -44,7 +52,8 @@
                 <div class="d-flex align-items-center gap-1">
                     <button class="btn btn-outline-secondary btn-xs cart-decrease" data-id="${item.id}"
                             style="width:26px;height:26px;padding:0;font-size:0.75rem;">−</button>
-                    <span class="fw-bold small" style="min-width:20px;text-align:center;">${item.quantity}</span>
+                    <span class="fw-bold small" style="min-width:20px;text-align:center;"
+                          id="panel-qty-${item.id}">${item.quantity}</span>
                     <button class="btn btn-outline-secondary btn-xs cart-increase" data-id="${item.id}"
                             style="width:26px;height:26px;padding:0;font-size:0.75rem;">+</button>
                 </div>
@@ -67,10 +76,16 @@
     }
 
     function loadCart() {
-        fetch(SUMMARY_URL, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(r => r.json())
-            .then(renderItems)
-            .catch(console.error);
+        fetch(SUMMARY_URL, {
+            credentials: 'same-origin',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => {
+            if (!r.ok) { console.error('Cart summary failed:', r.status, r.url); return; }
+            return r.json();
+        })
+        .then(data => { if (data) renderItems(data); })
+        .catch(err => console.error('loadCart error:', err));
     }
 
     function doUpdate(itemId, action) {
@@ -78,13 +93,14 @@
             method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': CSRF,
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'X-CSRFToken': getCsrf(),
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: `action=${action}`
-        }).then(r => r.json()).then(data => {
-            if (data.success) loadCart();
-        }).catch(console.error);
+        })
+        .then(r => r.json())
+        .then(data => { if (data.success) loadCart(); })
+        .catch(console.error);
     }
 
     function doRemove(itemId) {
@@ -92,17 +108,20 @@
             method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': CSRF,
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'X-CSRFToken': getCsrf(),
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: ''
-        }).then(r => r.json()).then(data => {
-            if (data.success) loadCart();
-        }).catch(console.error);
+        })
+        .then(r => r.json())
+        .then(data => { if (data.success) loadCart(); })
+        .catch(console.error);
     }
 
     document.addEventListener('DOMContentLoaded', loadCart);
-    document.getElementById('cartOffcanvas')
-        .addEventListener('show.bs.offcanvas', loadCart);
+
+    const offcanvasEl = document.getElementById('cartOffcanvas');
+    if (offcanvasEl) offcanvasEl.addEventListener('show.bs.offcanvas', loadCart);
+
     window.reloadCart = loadCart;
 })();

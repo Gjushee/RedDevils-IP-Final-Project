@@ -1,5 +1,5 @@
 {% extends "core/base.html" %}
-{% load static %}
+{% load static catalogue_extras %}
 
 {% block title %}{{ product.name }} — Red Devils Hub{% endblock %}
 
@@ -73,7 +73,15 @@
                 </p>
                 {% endif %}
 
+                {% if is_gold %}
+                <div class="mb-3">
+                    <span class="text-muted text-decoration-line-through me-2">£{{ product.price }}</span>
+                    <h3 class="fw-bold text-danger d-inline">£{{ product.price|discounted:discount_pct }}</h3>
+                    <span class="badge bg-warning text-dark ms-2">{{ discount_pct }}% Gold Discount</span>
+                </div>
+                {% else %}
                 <h3 class="fw-bold text-danger mb-3">£{{ product.price }}</h3>
+                {% endif %}
 
                 <!-- Product Meta -->
                 <div class="row g-2 mb-4">
@@ -143,9 +151,15 @@
                         <button type="submit" class="btn btn-danger btn-lg px-5" id="addToCartBtn">
                             <i class="bi bi-cart-plus me-2"></i>Add to Cart
                         </button>
-                        <a href="#" class="btn btn-outline-danger btn-lg">
-                            <i class="bi bi-heart me-1"></i>Wishlist
-                        </a>
+                        {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-outline-danger btn-lg wishlist-toggle-btn {% if in_wishlist %}active{% endif %}"
+                                data-product-id="{{ product.pk }}"
+                                data-toggle-url="{% url 'cart:toggle_wishlist' product.pk %}"
+                                title="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+                            <i class="bi {% if in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %} me-1"></i>
+                            {% if in_wishlist %}Wishlisted{% else %}Wishlist{% endif %}
+                        </button>
+                        {% endif %}
                     </form>
                     <div id="addToCartMsg" class="mt-2" style="display:none;"></div>
                     {% else %}
@@ -161,6 +175,41 @@
 
             </div>
         </div>
+    </div>
+
+    <!-- ── Star Rating ── -->
+    <div class="section-box mt-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-star-fill text-warning me-2"></i>Rate This Product</h5>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <!-- Stars -->
+            <div id="starWidget" class="d-flex gap-1"
+                 data-rate-url="{% url 'catalogue:rate_product' product.pk %}"
+                 data-user-rating="{{ user_rating|default:0 }}">
+                {% for i in "12345" %}
+                <i class="bi bi-star-fill star-btn fs-4"
+                   data-value="{{ forloop.counter }}"
+                   style="cursor:pointer; color:#dee2e6; transition:color 0.15s;">
+                </i>
+                {% endfor %}
+            </div>
+            <!-- Summary -->
+            <span class="text-muted small" id="ratingInfo">
+                {% if rating_count %}
+                    Average: <strong id="avgVal">{{ avg_rating }}</strong>/5
+                    &nbsp;·&nbsp; <span id="cntVal">{{ rating_count }}</span> rating{{ rating_count|pluralize }}
+                {% else %}
+                    No ratings yet — be the first!
+                {% endif %}
+            </span>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register:login' %}" class="btn btn-sm btn-outline-danger">Log in to rate</a>
+            {% else %}
+            <span id="ratingFeedback" class="small fw-semibold text-success" style="display:none;"></span>
+            {% endif %}
+        </div>
+        {% if user_rating %}
+        <p class="text-muted small mt-2 mb-0">Your rating: <strong>{{ user_rating }}/5</strong> — click a star to update.</p>
+        {% endif %}
     </div>
 
     <!-- Related Products -->
@@ -199,7 +248,5 @@
 {% endblock %}
 
 {% block extra_js %}
-{% if user.is_authenticated %}
 <script src="{% static 'catalogue/js/product_detail.js' %}"></script>
-{% endif %}
 {% endblock %}

@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 from catalogue.models import Product
-from .models import Cart, CartItem
+from .models import Cart, CartItem, WishlistItem
 
 
 def _get_or_create_cart(user):
@@ -14,6 +14,9 @@ def _get_or_create_cart(user):
     return cart
 
 
+# ──────────────────────────────────────────────
+# ADD TO CART
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def add_to_cart(request, product_id):
@@ -48,11 +51,14 @@ def add_to_cart(request, product_id):
     return redirect('catalogue:product_detail', slug=product.slug)
 
 
+# ──────────────────────────────────────────────
+# UPDATE QUANTITY (+/-)
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def update_quantity(request, item_id):
     item    = get_object_or_404(CartItem, pk=item_id, cart__user=request.user)
-    action  = request.POST.get('action')
+    action  = request.POST.get('action')  # 'increase' or 'decrease'
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if action == 'increase':
@@ -86,9 +92,13 @@ def update_quantity(request, item_id):
             'total_items': cart.total_items,
             'total_price': str(cart.total_price),
         })
+
     return redirect('cart:cart_detail')
 
 
+# ──────────────────────────────────────────────
+# REMOVE ITEM
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def remove_item(request, item_id):
@@ -104,10 +114,14 @@ def remove_item(request, item_id):
             'total_items': cart.total_items,
             'total_price': str(cart.total_price),
         })
+
     messages.success(request, 'Item removed from cart.')
     return redirect('cart:cart_detail')
 
 
+# ──────────────────────────────────────────────
+# CLEAR ENTIRE CART
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def clear_cart(request):
@@ -120,6 +134,9 @@ def clear_cart(request):
     return redirect('cart:cart_detail')
 
 
+# ──────────────────────────────────────────────
+# CART DETAIL PAGE
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 def cart_detail(request):
     cart  = _get_or_create_cart(request.user)
@@ -127,6 +144,9 @@ def cart_detail(request):
     return render(request, 'cart/cart_detail.html', {'cart': cart, 'items': items})
 
 
+# ──────────────────────────────────────────────
+# CART SUMMARY (JSON — used by the floating panel)
+# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 def cart_summary(request):
     cart  = _get_or_create_cart(request.user)
@@ -148,3 +168,29 @@ def cart_summary(request):
         'total_items': cart.total_items,
         'total_price': str(cart.total_price),
     })
+
+
+# ──────────────────────────────────────────────
+# WISHLIST
+# ──────────────────────────────────────────────
+
+@login_required
+def wishlist_page(request):
+    items = WishlistItem.objects.filter(user=request.user).select_related('product')
+    return render(request, 'cart/wishlist.html', {'items': items})
+
+
+@login_required
+def toggle_wishlist(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    item, created = WishlistItem.objects.get_or_create(user=request.user, product=product)
+    if not created:
+        item.delete()
+        in_wishlist = False
+    else:
+        in_wishlist = True
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'in_wishlist': in_wishlist})
+
+    return redirect(request.META.get('HTTP_REFERER', 'cart:wishlist_page'))

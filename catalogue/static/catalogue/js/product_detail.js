@@ -1,3 +1,65 @@
+'use strict';
+
+function getCSRF() {
+    const input = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (input) return input.value;
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+    return match ? match[1] : '';
+}
+
+// ── Star Rating ──────────────────────────────────────────────────
+(function () {
+    const widget   = document.getElementById('starWidget');
+    const feedback = document.getElementById('ratingFeedback');
+    if (!widget || !feedback) return;
+
+    const stars          = widget.querySelectorAll('.star-btn');
+    const RATE_URL       = widget.dataset.rateUrl;
+    const userRatingInit = parseInt(widget.dataset.userRating || '0', 10);
+
+    if (!RATE_URL) return;
+
+    function paint(upTo) {
+        stars.forEach(s => {
+            s.style.color = parseInt(s.dataset.value) <= upTo ? '#ffc107' : '#dee2e6';
+        });
+    }
+
+    paint(userRatingInit);
+
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', () => paint(parseInt(star.dataset.value)));
+        star.addEventListener('mouseleave', () => paint(userRatingInit));
+        star.addEventListener('click', () => {
+            const val = parseInt(star.dataset.value);
+            fetch(RATE_URL, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCSRF(),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `rating=${val}`
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    paint(data.user_rating);
+                    document.getElementById('ratingInfo').innerHTML =
+                        `Average: <strong id="avgVal">${data.avg_rating}</strong>/5`
+                        + ` &nbsp;·&nbsp; <span id="cntVal">${data.count}</span>`
+                        + ` rating${data.count !== 1 ? 's' : ''}`;
+                    feedback.textContent = `You rated ${data.user_rating}/5 — thanks!`;
+                    feedback.style.display = 'inline';
+                    setTimeout(() => { feedback.style.display = 'none'; }, 3000);
+                }
+            })
+            .catch(console.error);
+        });
+    });
+})();
+
+// ── Add to Cart ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('addToCartForm');
     if (!form) return;
@@ -22,14 +84,25 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(r => r.json())
         .then(data => {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-cart-check me-2"></i>Added!';
-            msg.style.display = 'block';
-            msg.innerHTML = `<div class="alert alert-success py-2">${data.message}</div>`;
-            if (window.reloadCart) window.reloadCart();
-            setTimeout(() => {
+            if (data.success) {
+                btn.innerHTML = '<i class="bi bi-cart-check me-2"></i>Added!';
+                msg.style.display = 'block';
+                msg.innerHTML = `<div class="alert alert-success py-2">${data.message}</div>`;
+                if (window.reloadCart) window.reloadCart();
+                const cartEl = document.getElementById('cartOffcanvas');
+                if (cartEl && typeof bootstrap !== 'undefined') {
+                    bootstrap.Offcanvas.getOrCreateInstance(cartEl).show();
+                }
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="bi bi-cart-plus me-2"></i>Add to Cart';
+                    msg.style.display = 'none';
+                }, 2500);
+            } else {
                 btn.innerHTML = '<i class="bi bi-cart-plus me-2"></i>Add to Cart';
-                msg.style.display = 'none';
-            }, 2500);
+                msg.style.display = 'block';
+                msg.innerHTML = `<div class="alert alert-warning py-2">${data.error || 'Could not add item to cart.'}</div>`;
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
+            }
         })
         .catch(() => {
             btn.disabled = false;

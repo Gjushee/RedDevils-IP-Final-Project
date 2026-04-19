@@ -1,0 +1,642 @@
+/* =============================================
+   RED DEVILS HUB — GLOBAL STYLES
+   ============================================= */
+
+/* GLOBAL BACKGROUND */
+body {
+  background: radial-gradient(circle at top, #ffffff 0%, #f3f4f6 45%, #eceff3 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(220,53,69,0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.12;
+  z-index: -1;
+}
+
+/* =============================================
+   NAVBAR
+   ============================================= */
+.custom-navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid #dc3545;
+}
+
+.header-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+.brand-title {
+  font-weight: 700;
+  font-size: 15px;
+  display: block;
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.navbar-nav .nav-link {
+  position: relative;
+  margin-left: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #dc3545;
+  transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #dc3545;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+
+.navbar-nav .nav-link.active {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+}
+
+/* Shrink auth buttons in navbar so they don't crowd */
+.custom-navbar .btn-sm {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+}
+
+/* =============================================
+   HERO SECTION
+   ============================================= */
+.hero-section {
+  min-height: 100vh;
+  background: url('../assets/123.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+.hero-section .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(138, 0, 0, 0.35);
+  z-index: 0;
+}
+
+.hero-content {
+  z-index: 1;
+  max-width: 700px;
+  padding: 2rem;
+}
+
+/* =============================================
+   SECTION BOX
+   ============================================= */
+.section-box {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.10);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 60px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.section-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, #dc3545, #a00000);
+}
+
+.section-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+}
+
+/* =============================================
+   CARDS
+   ============================================= */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 16px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================================
+   MATCH CAROUSEL
+   ============================================= */
+.match-image {
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* =============================================
+   PREMIER LEAGUE TABLE
+   ============================================= */
+.table {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.table thead th {
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(220, 53, 69, 0.06);
+  transition: 0.15s ease;
+}
+
+.club-logo {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.form-circle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 3px;
+  color: white;
+  text-align: center;
+}
+
+.win  { background-color: #28a745; }
+.draw { background-color: #ffc107; color: black; }
+.loss { background-color: #dc3545; }
+
+.highlight-row {
+  animation: glow 2s infinite alternate;
+  font-weight: bold;
+}
+
+@keyframes glow {
+  from { background-color: rgba(220, 53, 69, 0.2); }
+  to   { background-color: rgba(220, 53, 69, 0.5); }
+}
+
+/* =============================================
+   FORMS
+   ============================================= */
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  padding: 12px 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(220, 53, 69, 0.55);
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn-danger {
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(220, 53, 69, 0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(220, 53, 69, 0.35);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.main-footer {
+  background-color: #111827;
+}
+
+.footer-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.footer-link {
+  color: #adb5bd;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+.footer-link:hover {
+  color: white;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #1b263b;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.social-icon:hover {
+  background-color: #dc3545;
+  transform: translateY(-3px);
+}
+
+/* =============================================
+   DARK MODE TOGGLE BUTTON
+   ============================================= */
+.dark-toggle-btn {
+  border-radius: 50px;
+  padding: 6px 10px;
+  background: #111827;
+  color: white;
+  transition: 0.3s;
+}
+
+.dark-toggle-btn:hover {
+  background: #dc3545;
+  color: white;
+}
+
+/* =============================================
+   DARK MODE
+   ============================================= */
+body {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+/* Navbar */
+body.dark-mode .custom-navbar {
+  background: #111827;
+  border-bottom: 3px solid #dc3545;
+}
+
+body.dark-mode .navbar-nav .nav-link {
+  color: #e2e8f0;
+}
+
+body.dark-mode .navbar-nav .nav-link:hover {
+  color: #dc3545;
+}
+
+body.dark-mode .brand-title {
+  color: #ffffff;
+}
+
+body.dark-mode .brand-subtitle {
+  color: #cbd5e1;
+}
+
+/* Section boxes & cards */
+body.dark-mode .section-box,
+body.dark-mode .card {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+body.dark-mode .card-header {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .card-footer {
+  background: #1e293b;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text,
+body.dark-mode .card-subtitle {
+  color: #f1f5f9;
+}
+
+/* Text utilities */
+body.dark-mode .text-muted {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .text-dark {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .text-body {
+  color: #f1f5f9 !important;
+}
+
+/* Headings & general text */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #f1f5f9;
+}
+
+body.dark-mode p,
+body.dark-mode small,
+body.dark-mode span:not(.badge):not(.btn) {
+  color: inherit;
+}
+
+body.dark-mode label,
+body.dark-mode .form-label,
+body.dark-mode .form-check-label,
+body.dark-mode .form-text {
+  color: #cbd5e1;
+}
+
+/* Tables */
+body.dark-mode .table {
+  background: #1e293b;
+  color: #f1f5f9;
+  --bs-table-bg: #1e293b;
+  --bs-table-color: #f1f5f9;
+  --bs-table-border-color: rgba(255,255,255,0.08);
+}
+
+body.dark-mode .table thead th {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+body.dark-mode .table tbody tr {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: rgba(255,255,255,0.08);
+}
+
+body.dark-mode .table tbody tr:hover {
+  background: rgba(220,53,69,0.1);
+  color: #f1f5f9;
+  --bs-table-accent-bg: rgba(220,53,69,0.1);
+}
+
+body.dark-mode .table-light,
+body.dark-mode .table-light th,
+body.dark-mode .table-light td {
+  background: #162032 !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .table td,
+body.dark-mode .table th {
+  border-color: rgba(255,255,255,0.08);
+  color: #f1f5f9;
+}
+
+/* Forms */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode .form-control::placeholder {
+  color: #64748b;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: rgba(220,53,69,0.6);
+}
+
+body.dark-mode .input-group-text {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .form-check-input {
+  background-color: #1e293b;
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* Dropdowns */
+body.dark-mode .dropdown-menu {
+  background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .dropdown-item {
+  color: #f1f5f9;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: rgba(220,53,69,0.15);
+  color: #f1f5f9;
+}
+
+body.dark-mode .dropdown-divider {
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* Offcanvas (cart panel) */
+body.dark-mode .offcanvas,
+body.dark-mode .cart-offcanvas {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+body.dark-mode .offcanvas-header,
+body.dark-mode .offcanvas-body {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+body.dark-mode .btn-close {
+  filter: invert(1);
+}
+
+/* Alerts */
+body.dark-mode .alert {
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .alert-success {
+  background: rgba(34,197,94,0.15);
+  color: #86efac;
+  border-color: rgba(34,197,94,0.3);
+}
+
+body.dark-mode .alert-danger {
+  background: rgba(220,53,69,0.15);
+  color: #fca5a5;
+  border-color: rgba(220,53,69,0.3);
+}
+
+body.dark-mode .alert-warning {
+  background: rgba(234,179,8,0.15);
+  color: #fde047;
+  border-color: rgba(234,179,8,0.3);
+}
+
+body.dark-mode .alert-info {
+  background: rgba(14,165,233,0.15);
+  color: #7dd3fc;
+  border-color: rgba(14,165,233,0.3);
+}
+
+/* List groups */
+body.dark-mode .list-group-item {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* Borders & dividers */
+body.dark-mode hr {
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .border,
+body.dark-mode .border-top,
+body.dark-mode .border-bottom {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Backgrounds */
+body.dark-mode .bg-light {
+  background-color: #162032 !important;
+}
+
+body.dark-mode .bg-white {
+  background-color: #1e293b !important;
+}
+
+/* Pagination */
+body.dark-mode .page-link {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.1);
+  color: #f1f5f9;
+}
+
+body.dark-mode .page-link:hover {
+  background: rgba(220,53,69,0.2);
+  color: #f1f5f9;
+}
+
+body.dark-mode .page-item.active .page-link {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Modal */
+body.dark-mode .modal-content {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* Footer */
+body.dark-mode .main-footer {
+  background-color: #0f172a;
+}
+
+/* Scrollbar */
+body.dark-mode ::-webkit-scrollbar {
+  width: 8px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #dc3545;
+}
+
+/* =============================================
+   SPACING
+   ============================================= */
+section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* =============================================
+   ADMIN PROFILE BANNER
+   ============================================= */
+.admin-profile-banner {
+  background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 60%, #dc3545 100%);
+  padding: 1rem 0;
+  border-bottom: 3px solid #dc3545;
+}
+  

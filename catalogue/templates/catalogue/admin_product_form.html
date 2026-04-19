@@ -1,0 +1,119 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} — Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'register/css/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="admin-avatar"><i class="bi bi-bag-fill fs-3"></i></div>
+            <h4 class="fw-bold mb-0 text-white">{{ title }}</h4>
+        </div>
+        <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i>Back to Products
+        </a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="admin-panel" style="max-width:800px;margin:auto;">
+        <div class="admin-panel-body">
+
+            {% if product and product.primary_image %}
+            <div class="mb-4 text-center">
+                <img src="{{ product.primary_image.image.url }}"
+                     style="max-height:200px;border-radius:12px;" class="shadow-sm">
+                <p class="text-muted small mt-2">Current image — upload a new one to replace it</p>
+            </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Product Name *</label>
+                        {{ form.name }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Subcategory *</label>
+                        {{ form.subcategory }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Player / Collection</label>
+                        {{ form.player }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Price (£) *</label>
+                        {{ form.price }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Stock Quantity</label>
+                        {{ form.stock_quantity }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Size</label>
+                        {{ form.size }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Colour</label>
+                        {{ form.colour }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Brand</label>
+                        {{ form.brand }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Season</label>
+                        {{ form.season }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Access Level</label>
+                        {{ form.access_level }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Product Image</label>
+                        {{ form.primary_image }}
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Description</label>
+                        {{ form.description }}
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check">
+                            {{ form.is_available }}
+                            <label class="form-check-label fw-semibold">Available in catalogue</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-danger px-5">
+                        <i class="bi bi-check-lg me-2"></i>{{ title }}
+                    </button>
+                    <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

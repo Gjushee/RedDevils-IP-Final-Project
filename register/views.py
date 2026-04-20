@@ -319,8 +319,14 @@ def membership_checkout(request, plan):
     except Exception:
         pass
 
-    tier_order = ['free', 'red', 'gold', 'admin']
-    if tier_order.index(current_role) >= tier_order.index(plan):
+    # Admins have access to everything — no purchase needed
+    if current_role == 'admin':
+        messages.info(request, 'As an admin you already have access to all membership benefits.')
+        return redirect('register:membership_plans')
+
+    # Already on this plan or higher
+    tier_order = ['free', 'red', 'gold']
+    if current_role in tier_order and tier_order.index(current_role) >= tier_order.index(plan):
         messages.info(request, f'You are already on {MEMBERSHIP_PLANS[current_role]["name"]} or higher.')
         return redirect('register:membership_plans')
 

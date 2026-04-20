@@ -1,0 +1,192 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Manage Gold Hub — Red Devils Hub{% endblock %}
+ 
+{% block content %}
+<section class="container my-5">
+ 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-star-fill text-warning me-2"></i>Gold Hub Management
+        </h3>
+        <a href="{% url 'register:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Admin
+        </a>
+    </div>
+ 
+    {% if messages %}
+        {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+            {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+ 
+    <!-- ── POLLS ──────────────────────────────────────────────── -->
+    <div class="section-box mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-bar-chart-fill text-danger me-2"></i>Player of the Month Polls</h5>
+            <a href="{% url 'gold_hub:admin_poll_add' %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>Add Poll
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Month</th>
+                        <th>Options</th>
+                        <th>Total Votes</th>
+                        <th>Active</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for poll in polls %}
+                    <tr>
+                        <td class="fw-semibold">{{ poll.title }}</td>
+                        <td>{{ poll.month_label }}</td>
+                        <td>
+                            <a href="{% url 'gold_hub:admin_poll_options' poll.pk %}" class="badge bg-secondary text-decoration-none">
+                                {{ poll.options.count }} options
+                            </a>
+                        </td>
+                        <td>{{ poll.total_votes }}</td>
+                        <td>
+                            {% if poll.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'gold_hub:admin_poll_options' poll.pk %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-list-ul"></i> Options
+                            </a>
+                            <a href="{% url 'gold_hub:admin_poll_edit' poll.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'gold_hub:admin_poll_delete' poll.pk %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted py-3">No polls yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- ── PLAYER STATS ───────────────────────────────────────── -->
+    <div class="section-box mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-person-fill text-danger me-2"></i>Player Stats</h5>
+            <a href="{% url 'gold_hub:admin_player_stat_add' %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>Add Player
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Season</th>
+                        <th>Apps</th>
+                        <th>Goals</th>
+                        <th>Assists</th>
+                        <th>Rating</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in player_stats %}
+                    <tr>
+                        <td class="fw-semibold">{{ stat.name }}</td>
+                        <td><span class="badge bg-secondary">{{ stat.position }}</span></td>
+                        <td>{{ stat.season }}</td>
+                        <td>{{ stat.appearances }}</td>
+                        <td>{{ stat.goals }}</td>
+                        <td>{{ stat.assists }}</td>
+                        <td><span class="badge bg-danger">{{ stat.rating }}</span></td>
+                        <td class="text-end">
+                            <a href="{% url 'gold_hub:admin_player_stat_edit' stat.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'gold_hub:admin_player_stat_delete' stat.pk %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-3">No player stats yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- ── CLUB STATS ─────────────────────────────────────────── -->
+    <div class="section-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-trophy-fill text-danger me-2"></i>Club Stats</h5>
+            <a href="{% url 'gold_hub:admin_club_stat_add' %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>Add Season
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Season</th>
+                        <th>Competition</th>
+                        <th>P</th><th>W</th><th>D</th><th>L</th>
+                        <th>GF</th><th>GA</th><th>GD</th>
+                        <th>Pts</th><th>Pos</th>
+                        <th>Current</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in club_stats %}
+                    <tr>
+                        <td class="fw-semibold">{{ stat.season }}</td>
+                        <td>{{ stat.competition }}</td>
+                        <td>{{ stat.played }}</td>
+                        <td>{{ stat.won }}</td>
+                        <td>{{ stat.drawn }}</td>
+                        <td>{{ stat.lost }}</td>
+                        <td>{{ stat.goals_for }}</td>
+                        <td>{{ stat.goals_against }}</td>
+                        <td>{{ stat.goal_difference }}</td>
+                        <td><strong>{{ stat.points }}</strong></td>
+                        <td>{{ stat.position }}</td>
+                        <td>
+                            {% if stat.is_current %}
+                            <span class="badge bg-success">Yes</span>
+                            {% else %}
+                            <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'gold_hub:admin_club_stat_edit' stat.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'gold_hub:admin_club_stat_delete' stat.pk %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="13" class="text-center text-muted py-3">No club stats yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+</section>
+{% endblock %}

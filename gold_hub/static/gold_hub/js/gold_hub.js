@@ -2,20 +2,32 @@
     'use strict';
 
     const CSRF = document.querySelector('[name=csrfmiddlewaretoken]')
-               ? document.querySelector('[name=csrfmiddlewaretoken]').value : '';
+               ? document.querySelector('[name=csrfmiddlewaretoken]').value
+               : '';
+
+    // Set initial bar widths from data attributes (avoids inline Django template CSS)
+    document.querySelectorAll('.vote-bar[data-pct]').forEach(function (bar) {
+        bar.style.width = bar.dataset.pct + '%';
+    });
 
     document.querySelectorAll('.poll-vote-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            const voteUrl = this.dataset.voteUrl;
+            const optionId = this.dataset.optionId;
+            const pollId   = this.dataset.pollId;
+            const voteUrl  = this.dataset.voteUrl;
+
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
             fetch(voteUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+                method:  'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken':  CSRF,
+                },
             })
-            .then(r => r.json())
-            .then(data => {
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
                 if (data.ok) {
                     updatePollUI(data);
                 } else {
@@ -24,7 +36,7 @@
                     btn.innerHTML = 'Vote';
                 }
             })
-            .catch(() => {
+            .catch(function () {
                 alert('Network error. Please try again.');
                 btn.disabled = false;
                 btn.innerHTML = 'Vote';
@@ -37,7 +49,9 @@
             const card = document.querySelector('[data-option-card="' + opt.id + '"]');
             if (!card) return;
 
-            if (opt.id === data.voted_id) card.classList.add('voted');
+            if (opt.id === data.voted_id) {
+                card.classList.add('voted');
+            }
 
             const bar = card.querySelector('.vote-bar');
             if (bar) bar.style.width = opt.percentage + '%';
@@ -47,15 +61,19 @@
 
             const voteBtn = card.querySelector('.poll-vote-btn');
             if (voteBtn) {
-                if (opt.id === data.voted_id) voteBtn.outerHTML = '<span class="badge bg-danger px-3 py-2">Your Vote</span>';
-                else voteBtn.remove();
+                if (opt.id === data.voted_id) {
+                    voteBtn.outerHTML = '<span class="badge bg-danger px-3 py-2">Your Vote</span>';
+                } else {
+                    voteBtn.remove();
+                }
             }
         });
 
+        // Highlight winner
         let maxVotes = 0;
-        data.options.forEach(o => { if (o.votes > maxVotes) maxVotes = o.votes; });
+        data.options.forEach(function (o) { if (o.votes > maxVotes) maxVotes = o.votes; });
         if (maxVotes > 0) {
-            data.options.forEach(o => {
+            data.options.forEach(function (o) {
                 if (o.votes === maxVotes) {
                     const card = document.querySelector('[data-option-card="' + o.id + '"]');
                     if (card) card.classList.add('winner');
@@ -63,7 +81,9 @@
             });
         }
 
-        const totalEl = document.getElementById('pollTotalVotes');
+        // Update total count for the correct poll section
+        const totalEl = document.getElementById('pollTotalVotes-' + data.poll_id);
         if (totalEl) totalEl.textContent = data.total + ' vote' + (data.total !== 1 ? 's' : '') + ' cast';
     }
+
 })();

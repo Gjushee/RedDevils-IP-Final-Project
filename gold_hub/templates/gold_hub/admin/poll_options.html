@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+{% block title %}Poll Options — Red Devils Hub{% endblock %}
+{% block content %}
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-0"><i class="bi bi-list-ul text-danger me-2"></i>Options: {{ poll.title }}</h4>
+            <small class="text-muted">{{ poll.month_label }} · {{ poll.total_votes }} votes</small>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'gold_hub:admin_option_add' poll.pk %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-plus-lg me-1"></i>Add Option
+            </a>
+            <a href="{% url 'gold_hub:admin_gold_hub' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+ 
+    {% if messages %}{% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+        {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}{% endif %}
+ 
+    <div class="section-box">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order</th>
+                        <th>Player</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th>Votes</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opt in options %}
+                    <tr>
+                        <td>{{ opt.order }}</td>
+                        <td class="fw-semibold">{{ opt.player_name }}</td>
+                        <td class="text-muted small">{{ opt.description }}</td>
+                        <td>
+                            {% if opt.image %}
+                            <img src="{{ opt.image.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
+                            {% else %}
+                            <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ opt.vote_count }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'gold_hub:admin_option_edit' opt.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'gold_hub:admin_option_delete' opt.pk %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted py-3">No options yet. Add one above.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

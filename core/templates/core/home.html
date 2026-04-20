@@ -32,7 +32,7 @@
                 <!-- Slide 1 -->
                 <div class="carousel-item active">
                     <div class="card border-0 bg-dark text-white text-center p-4">
-                        <img src="{% static 'assets/reS.jpg' %}"
+                        <img src="{% static 'assets/res.jpg' %}"
                              class="img-fluid rounded mx-auto d-block mb-4 match-image"
                              alt="Match Image">
                         <p class="lead">
@@ -41,7 +41,7 @@
                             composure and attacking intent, responding quickly and taking advantage of transitions.
                         </p>
                         <div class="text-center">
-                            <a href="#" class="btn btn-danger px-4">View Player Ratings</a>
+                            <a href="{% url 'matches:match_ratings' %}" class="btn btn-danger px-4">View Player Ratings</a>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <!-- Slide 2 -->
                 <div class="carousel-item">
                     <div class="card border-0 bg-dark text-white text-center p-4">
-                        <img src="{% static 'assets/cuhna2.jpeg' %}"
+                        <img src="{% static 'assets/res2.jpg' %}"
                              class="img-fluid rounded mx-auto d-block mb-4 match-image"
                              alt="Match Image">
                         <p class="lead">
@@ -58,7 +58,7 @@
                             United's efficiency in key moments ultimately made the difference.
                         </p>
                         <div class="text-center">
-                            <a href="#" class="btn btn-danger px-4">View Player Ratings</a>
+                            <a href="{% url 'matches:match_ratings' %}" class="btn btn-danger px-4">View Player Ratings</a>
                         </div>
                     </div>
                 </div>

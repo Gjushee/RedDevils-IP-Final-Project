@@ -36,6 +36,11 @@ def add_to_cart(request, product_id):
         defaults={'quantity': 1}
     )
     if not created:
+        if item.quantity >= 5:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Maximum of 5 per item allowed.'})
+            messages.warning(request, 'You can only add up to 5 of the same item.')
+            return redirect('catalogue:product_detail', slug=product.slug)
         item.quantity += 1
         item.save()
 
@@ -62,6 +67,11 @@ def update_quantity(request, item_id):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if action == 'increase':
+        if item.quantity >= 5:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Maximum of 5 per item allowed.'})
+            messages.warning(request, 'You can only add up to 5 of the same item.')
+            return redirect('cart:cart_detail')
         item.quantity += 1
         item.save()
     elif action == 'decrease':

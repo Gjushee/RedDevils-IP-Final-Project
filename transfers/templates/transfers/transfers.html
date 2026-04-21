@@ -1,14 +1,14 @@
 {% extends "core/base.html" %}
 {% load static %}
- 
+
 {% block title %}Transfer Rumours — Red Devils Hub{% endblock %}
- 
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'transfers/css/transfers.css' %}">
 {% endblock %}
- 
+
 {% block content %}
- 
+
 <!-- ===================== HERO ===================== -->
 <section class="transfers-hero d-flex align-items-center justify-content-center text-center text-white">
     <div class="overlay"></div>
@@ -17,7 +17,7 @@
         <p class="lead">Track the latest Manchester United transfer links. Red members can submit their own sources.</p>
     </div>
 </section>
- 
+
 <!-- ===================== STATS CARDS ===================== -->
 <section class="container my-5">
     <div class="row g-4 justify-content-center">
@@ -50,19 +50,19 @@
         </div>
     </div>
 </section>
- 
+
 <!-- ===================== FAVOURITE TRANSFERS CAROUSEL ===================== -->
 <section class="container my-5">
     <div class="section-box">
         <h3 class="text-center mb-4 fw-bold">Fan Favourite Targets</h3>
         <div id="favTransfersCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner rounded">
- 
+
                 <!-- Slide 1 -->
                 <div class="carousel-item active">
                     <div class="fav-transfer-card text-center p-4">
                         <div class="fav-player-img-wrapper mx-auto mb-3">
-                            <img src="{% static 'transfers/assets/osimhen.jpg' %}" alt="Osimhen" class="fav-player-img">
+                            <img src="{% static 'assets/osi.jpg' %}" alt="Osimhen" class="fav-player-img">
                         </div>
                         <h4 class="fw-bold">Victor Osimhen</h4>
                         <p class="text-muted mb-1">Napoli · Forward · 25</p>
@@ -72,12 +72,12 @@
                         </p>
                     </div>
                 </div>
- 
+
                 <!-- Slide 2 -->
                 <div class="carousel-item">
                     <div class="fav-transfer-card text-center p-4">
                         <div class="fav-player-img-wrapper mx-auto mb-3">
-                            <img src="{% static 'transfers/assets/dejong.jpg' %}" alt="De Jong" class="fav-player-img">
+                            <img src="{% static 'assets/jong.jpg' %}" alt="De Jong" class="fav-player-img">
                         </div>
                         <h4 class="fw-bold">Frenkie de Jong</h4>
                         <p class="text-muted mb-1">Barcelona · Midfielder · 27</p>
@@ -87,12 +87,12 @@
                         </p>
                     </div>
                 </div>
- 
+
                 <!-- Slide 3 -->
                 <div class="carousel-item">
                     <div class="fav-transfer-card text-center p-4">
                         <div class="fav-player-img-wrapper mx-auto mb-3">
-                            <img src="{% static 'transfers/assets/branthwaite.jpg' %}" alt="Branthwaite" class="fav-player-img">
+                            <img src="{% static 'assets/brant.jpg' %}" alt="Branthwaite" class="fav-player-img">
                         </div>
                         <h4 class="fw-bold">Jarrad Branthwaite</h4>
                         <p class="text-muted mb-1">Everton · Defender · 22</p>
@@ -102,12 +102,12 @@
                         </p>
                     </div>
                 </div>
- 
+
                 <!-- Slide 4 -->
                 <div class="carousel-item">
                     <div class="fav-transfer-card text-center p-4">
                         <div class="fav-player-img-wrapper mx-auto mb-3">
-                            <img src="{% static 'transfers/assets/diogo_costa.jpg' %}" alt="Diogo Costa" class="fav-player-img">
+                            <img src="{% static 'assets/costa.jpg' %}" alt="Diogo Costa" class="fav-player-img">
                         </div>
                         <h4 class="fw-bold">Diogo Costa</h4>
                         <p class="text-muted mb-1">Porto · Goalkeeper · 25</p>
@@ -117,12 +117,12 @@
                         </p>
                     </div>
                 </div>
- 
+
                 <!-- Slide 5 -->
                 <div class="carousel-item">
                     <div class="fav-transfer-card text-center p-4">
                         <div class="fav-player-img-wrapper mx-auto mb-3">
-                            <img src="{% static 'transfers/assets/olise.jpg' %}" alt="Olise" class="fav-player-img">
+                            <img src="{% static 'assets/olise.jpg' %}" alt="Olise" class="fav-player-img">
                         </div>
                         <h4 class="fw-bold">Michael Olise</h4>
                         <p class="text-muted mb-1">Bayern Munich · Midfielder · 23</p>
@@ -132,11 +132,11 @@
                         </p>
                     </div>
                 </div>
- 
+
             </div>
- 
+
             <!-- Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#favTransfersCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" nsfers/type="button" data-bs-target="#favTransfersCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#favTransfersCarousel" data-bs-slide="next">
@@ -145,7 +145,7 @@
         </div>
     </div>
 </section>
- 
+
 <!-- ===================== SUBMIT FORM (Red+ only) ===================== -->
 {% if can_submit %}
 <section class="container my-5">
@@ -154,7 +154,7 @@
         <p class="text-center text-muted mb-4">
             All submissions are reviewed by our admin team before going live.
         </p>
- 
+
         {% if messages %}
         <div class="mb-3">
             {% for msg in messages %}
@@ -165,7 +165,7 @@
             {% endfor %}
         </div>
         {% endif %}
- 
+
         <form method="POST" class="row g-3" id="rumourForm">
             {% csrf_token %}
             <div class="col-md-6">
@@ -251,13 +251,13 @@
     </div>
 </section>
 {% endif %}
- 
+
 <!-- ===================== RUMOURS TABLE ===================== -->
 <section class="container my-5">
     <div class="section-box">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
             <h3 class="fw-bold mb-0">Latest Rumours</h3>
- 
+
             <!-- Filter & Sort -->
             <form method="GET" class="d-flex gap-2 flex-wrap align-items-center">
                 <select name="position" class="form-select form-select-sm" style="width:150px;" onchange="this.form.submit()">
@@ -275,7 +275,7 @@
                 </select>
             </form>
         </div>
- 
+
         {% if rumours %}
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -310,7 +310,8 @@
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="likelihood-bar-bg">
-                                    <div class="likelihood-bar" style="width:{{ rumour.likelihood }}0%"
+                                    <div class="likelihood-bar"
+                                         data-pct="{{ rumour.likelihood }}0"
                                          data-score="{{ rumour.likelihood }}"></div>
                                 </div>
                                 <span class="fw-bold text-danger">{{ rumour.likelihood }}/10</span>
@@ -339,7 +340,7 @@
             </p>
         </div>
         {% endif %}
- 
+
         {% if user.is_authenticated and user.profile.is_red_or_above %}
         <div class="text-end mt-3">
             <a href="{% url 'transfers:my_rumours' %}" class="btn btn-sm btn-outline-danger">
@@ -349,9 +350,9 @@
         {% endif %}
     </div>
 </section>
- 
+
 {% endblock %}
- 
+
 {% block extra_js %}
 <script src="{% static 'transfers/js/transfers.js' %}"></script>
 {% endblock %}

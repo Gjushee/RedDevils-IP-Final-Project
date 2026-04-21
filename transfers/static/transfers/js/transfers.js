@@ -1,18 +1,23 @@
 /* ===================== TRANSFERS PAGE JS ===================== */
- 
+
 document.addEventListener('DOMContentLoaded', function () {
- 
+
+    // --- Set likelihood bar widths from data-pct attribute ---
+    document.querySelectorAll('.likelihood-bar[data-pct]').forEach(function (bar) {
+        bar.style.width = bar.dataset.pct + '%';
+    });
+
     // --- Likelihood slider live label ---
     const slider = document.getElementById('likelihoodSlider');
     const valueLabel = document.getElementById('likelihoodValue');
- 
+
     if (slider && valueLabel) {
         // Set initial display
         valueLabel.textContent = slider.value;
- 
+
         slider.addEventListener('input', function () {
             valueLabel.textContent = this.value;
- 
+
             // Update label colour based on score
             const score = parseInt(this.value, 10);
             if (score <= 3) {
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
- 
+
     // --- Auto-dismiss alerts after 4 seconds ---
     document.querySelectorAll('.alert').forEach(function (alert) {
         setTimeout(function () {
@@ -34,5 +39,5 @@ document.addEventListener('DOMContentLoaded', function () {
             if (bsAlert) bsAlert.close();
         }, 4000);
     });
- 
+
 });

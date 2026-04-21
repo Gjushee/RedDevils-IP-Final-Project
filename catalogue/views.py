@@ -19,6 +19,7 @@ def catalogue(request):
     categories  = Category.objects.prefetch_related('subcategories')
     players     = Player.objects.all()
 
+    # ── Basic search (name or player/collection) ──────────────
     query = request.GET.get('q', '').strip()
     if query:
         products = products.filter(
@@ -28,6 +29,7 @@ def catalogue(request):
             Q(description__icontains=query)
         )
 
+    # ── Advanced filters ──────────────────────────────────────
     category_slug    = request.GET.get('category', '')
     subcategory_slug = request.GET.get('subcategory', '')
     player_id        = request.GET.get('player', '')
@@ -63,6 +65,7 @@ def catalogue(request):
     if access_level:
         products = products.filter(access_level=access_level)
 
+    # ── Membership gate — hide premium products from lower tiers ──
     if request.user.is_authenticated:
         try:
             role = request.user.profile.role
@@ -76,6 +79,7 @@ def catalogue(request):
     if role not in ('red', 'gold', 'admin'):
         products = products.exclude(access_level='red')
 
+    # ── Collect unique colours for the filter dropdown ──
     colours = (
         Product.objects.filter(is_available=True)
         .exclude(colour='')
@@ -86,6 +90,7 @@ def catalogue(request):
 
     is_gold = role in ('gold', 'admin')
 
+    # ── Recommendations — based on recently viewed products ───────
     recommended = []
     viewed_ids  = request.session.get('recently_viewed', [])
     no_filters  = not any([query, category_slug, subcategory_slug,
@@ -97,6 +102,7 @@ def catalogue(request):
         if role not in ('red', 'gold', 'admin'):
             base_qs = base_qs.exclude(access_level='red')
 
+        # 1st priority: same subcategory
         subcat_ids = list(
             Product.objects.filter(pk__in=viewed_ids)
             .values_list('subcategory_id', flat=True)
@@ -107,6 +113,7 @@ def catalogue(request):
             .distinct()[:4]
         )
 
+        # 2nd priority: same category (fill remaining slots)
         if len(rec_list) < 4:
             cat_ids = list(
                 Product.objects.filter(pk__in=viewed_ids)
@@ -121,6 +128,7 @@ def catalogue(request):
             )
             rec_list += extra
 
+        # 3rd priority: anything available (fill remaining slots)
         if len(rec_list) < 4:
             already = [p.pk for p in rec_list]
             extra = list(
@@ -132,6 +140,7 @@ def catalogue(request):
 
         recommended = rec_list
 
+    # Wishlist ids for heart button state
     wishlist_ids = set()
     if request.user.is_authenticated:
         from cart.models import WishlistItem
@@ -183,6 +192,7 @@ def product_detail(request, slug):
         if product.access_level == 'red' and role not in ('red', 'gold', 'admin'):
             return render(request, 'catalogue/product_locked.html', {'product': product})
 
+    # ── Track recently viewed in session ─────────────────────────
     viewed = request.session.get('recently_viewed', [])
     if product.pk not in viewed:
         viewed.insert(0, product.pk)
@@ -214,15 +224,15 @@ def product_detail(request, slug):
         user_rating = r.rating if r else None
 
     context = {
-        'product':       product,
-        'related':       related,
-        'is_gold':       is_gold,
-        'discount_pct':  getattr(settings, 'GOLD_DISCOUNT_PERCENT', 10),
-        'gold_price':    _gold_price(product.price) if is_gold else None,
-        'in_wishlist':   in_wishlist,
-        'avg_rating':    avg_rating,
-        'rating_count':  rating_count,
-        'user_rating':   user_rating,
+        'product':      product,
+        'related':      related,
+        'is_gold':      is_gold,
+        'discount_pct': getattr(settings, 'GOLD_DISCOUNT_PERCENT', 10),
+        'gold_price':   _gold_price(product.price) if is_gold else None,
+        'in_wishlist':  in_wishlist,
+        'avg_rating':   avg_rating,
+        'rating_count': rating_count,
+        'user_rating':  user_rating,
     }
     return render(request, 'catalogue/product_detail.html', context)
 
@@ -276,6 +286,8 @@ def _admin_check(request):
     return None
 
 
+# ── Products ──────────────────────────────────────────────────
+
 def admin_product_list(request):
     guard = _admin_check(request)
     if guard:
@@ -294,7 +306,7 @@ def admin_product_add(request):
         if form.is_valid():
             product = form.save()
             if img_form.is_valid() and request.FILES.get('image'):
-                img = img_form.save(commit=False)
+                img            = img_form.save(commit=False)
                 img.product    = product
                 img.is_primary = True
                 img.save()
@@ -319,7 +331,7 @@ def admin_product_edit(request, pk):
         if form.is_valid():
             form.save()
             if img_form.is_valid() and request.FILES.get('image'):
-                img = img_form.save(commit=False)
+                img            = img_form.save(commit=False)
                 img.product    = product
                 img.is_primary = True
                 img.save()
@@ -345,6 +357,8 @@ def admin_product_delete(request, pk):
         return redirect('catalogue:admin_product_list')
     return render(request, 'catalogue/admin/product_confirm_delete.html', {'product': product})
 
+
+# ── Categories ────────────────────────────────────────────────
 
 def admin_category_list(request):
     guard = _admin_check(request)
@@ -397,6 +411,8 @@ def admin_category_delete(request, pk):
         return redirect('catalogue:admin_category_list')
     return render(request, 'catalogue/admin/category_confirm_delete.html', {'cat': cat})
 
+
+# ── Subcategories ─────────────────────────────────────────────
 
 def admin_subcategory_add(request):
     guard = _admin_check(request)

@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<!-- Hero -->
+<!-- HERO HEADER -->
 <section class="contact-hero text-white text-center py-5">
     <div class="container">
         <h1 class="fw-bold mb-2">Contact Us</h1>
@@ -17,7 +17,7 @@
     </div>
 </section>
 
-<!-- Main Content -->
+<!-- MAIN CONTENT -->
 <div class="container my-5">
     <div class="row g-4 align-items-start">
 
@@ -27,7 +27,7 @@
                 <h5 class="fw-bold mb-1">Send Us a Message</h5>
                 <p class="text-muted mb-4">Fill out the form below and we'll get back to you as soon as possible</p>
 
-                <form id="contactForm" data-url="{% url 'core:contact' %}" novalidate>
+                <form id="contactForm" data-url="{% url 'core:contact' %}" method="POST" novalidate>
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="fullName" class="form-label fw-semibold">Name *</label>
@@ -63,8 +63,8 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-danger w-100 py-2">
-                        <i class="bi bi-send me-2"></i>Send Message
+                    <button type="submit" class="btn btn-dark w-100 py-2">
+                        Send Message
                     </button>
                 </form>
             </div>
@@ -72,7 +72,6 @@
 
         <!-- RIGHT: Info, Social, Map -->
         <div class="col-lg-5">
-
             <div class="contact-box mb-4">
                 <h6 class="fw-bold mb-3">Contact Information</h6>
 
@@ -98,7 +97,8 @@
                         <div class="fw-semibold">Address</div>
                         <div class="text-muted small">
                             Sir Matt Busby Way<br>
-                            Old Trafford, Manchester M16 0RA<br>
+                            Old Trafford<br>
+                            Manchester M16 0RA<br>
                             United Kingdom
                         </div>
                     </div>
@@ -108,17 +108,18 @@
             <div class="contact-box mb-4">
                 <h6 class="fw-bold mb-1">Follow Us</h6>
                 <p class="text-muted small mb-3">Stay connected on social media</p>
+
                 <div class="d-flex gap-3">
-                    <a class="social-btn social-fb" href="https://facebook.com" target="_blank" rel="noopener">
+                    <a class="social-btn social-fb" href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
                         <i class="bi bi-facebook"></i>
                     </a>
-                    <a class="social-btn social-x" href="https://x.com" target="_blank" rel="noopener">
+                    <a class="social-btn social-x" href="https://x.com" target="_blank" rel="noopener" aria-label="X (Twitter)">
                         <i class="bi bi-twitter-x"></i>
                     </a>
-                    <a class="social-btn social-ig" href="https://instagram.com" target="_blank" rel="noopener">
+                    <a class="social-btn social-ig" href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
                         <i class="bi bi-instagram"></i>
                     </a>
-                    <a class="social-btn social-yt" href="https://youtube.com" target="_blank" rel="noopener">
+                    <a class="social-btn social-yt" href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube">
                         <i class="bi bi-youtube"></i>
                     </a>
                 </div>
@@ -126,9 +127,13 @@
 
             <div class="contact-box">
                 <h6 class="fw-bold mb-3">Our Location</h6>
-                <iframe class="map-frame" loading="lazy"
+                <iframe
+                        class="map-frame"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
                         src="https://www.google.com/maps?q=Old%20Trafford%20Manchester%20United%20Football%20Ground&output=embed"
-                        title="Old Trafford"></iframe>
+                        title="Google Map - Old Trafford">
+                </iframe>
             </div>
         </div>
 
@@ -136,12 +141,12 @@
 </div>
 
 <!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold">Message Sent ✅</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title fw-bold" id="confirmModalLabel">Message Sent ✅</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="mb-3">Thanks! We received your message:</p>

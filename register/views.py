@@ -209,6 +209,15 @@ def admin_dashboard(request):
     except Exception:
         total_products = 0
 
+    try:
+        from core.models import ContactMessage
+        contact_messages = ContactMessage.objects.all()
+        unread_messages  = contact_messages.filter(is_read=False).count()
+    except Exception:
+        contact_messages = []
+        unread_messages  = 0
+
+
     context = {
         'all_users':       all_users,
         'total_users':     total_users,
@@ -216,6 +225,9 @@ def admin_dashboard(request):
         'pending_rumours': pending_rumours,
         'recent_rumours':  recent_rumours,
         'total_products':  total_products,
+        'contact_messages': contact_messages,
+        'unread_messages':  unread_messages,
+
     }
     return render(request, 'register/admin_dashboard.html', context)
 
@@ -429,3 +441,23 @@ def change_password(request):
 @login_required(login_url='/login/')
 def change_password_done(request):
     return render(request, 'register/change_password_done.html')
+
+
+def mark_message_read(request, pk):
+    if not request.user.is_authenticated or not request.user.profile.is_admin():
+        return redirect('core:home')
+    from core.models import ContactMessage
+    msg = get_object_or_404(ContactMessage, pk=pk)
+    msg.is_read = True
+    msg.save()
+    return redirect('register:admin_dashboard')
+
+def delete_message(request, pk):
+    if not request.user.is_authenticated or not request.user.profile.is_admin():
+        return redirect('core:home')
+    from core.models import ContactMessage
+    msg = get_object_or_404(ContactMessage, pk=pk)
+    msg.delete()
+    return redirect('register:admin_dashboard')
+
+

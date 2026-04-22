@@ -105,7 +105,7 @@ def cast_vote(request, option_id):
     return JsonResponse({'ok': True, 'total': total, 'options': options, 'voted_id': option.id, 'poll_id': poll.id})
 
 
-# ── ADMIN: Main overview ──────────────────────────────────────────────────────
+# ── ADMIN: Main overview 
 
 def admin_gold_hub(request):
     guard = _admin_check(request)
@@ -119,7 +119,7 @@ def admin_gold_hub(request):
     })
 
 
-# ── ADMIN: Polls ──────────────────────────────────────────────────────────────
+# ── ADMIN: Polls 
 
 def admin_poll_add(request):
     guard = _admin_check(request)
@@ -161,7 +161,7 @@ def admin_poll_delete(request, pk):
     })
 
 
-# ── ADMIN: Poll Options ───────────────────────────────────────────────────────
+# ── ADMIN: Poll Options 
 
 def admin_poll_options(request, pk):
     guard = _admin_check(request)
@@ -216,7 +216,7 @@ def admin_option_delete(request, pk):
     })
 
 
-# ── ADMIN: Player Stats ───────────────────────────────────────────────────────
+# ── ADMIN: Player Stats 
 
 def admin_player_stat_add(request):
     guard = _admin_check(request)
@@ -258,7 +258,7 @@ def admin_player_stat_delete(request, pk):
     })
 
 
-# ── ADMIN: Club Stats ─────────────────────────────────────────────────────────
+# ── ADMIN: Club Stats
 
 def admin_club_stat_add(request):
     guard = _admin_check(request)

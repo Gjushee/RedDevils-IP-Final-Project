@@ -73,7 +73,7 @@
                 <h2 class="fw-bold mb-0">{{ unread_messages }}</h2>
                 <span class="text-muted small">Unread Messages</span>
                 {% if unread_messages > 0 %}
-                <span class="badge bg-danger mt-1">New</span>
+                <span class="badge bg-warning text-dark mt-1">New</span>
                 {% endif %}
             </div>
         </div>
@@ -197,7 +197,7 @@
         <!-- ===================== RIGHT: SIDEBAR PANELS ===================== -->
         <div class="col-lg-4">
 
-            <!-- Django Messages -->
+            <!-- Messages -->
             {% if messages %}
             <div class="mb-3">
                 {% for msg in messages %}
@@ -209,42 +209,43 @@
             {% endif %}
 
             <!-- Quick Navigation -->
-            <div class="admin-panel mb-4">
-                <div class="admin-panel-header">
-                    <i class="bi bi-lightning-fill me-2"></i>Quick Navigation
-                </div>
-                <div class="admin-panel-body d-grid gap-2">
-                    <a href="{% url 'transfers:admin_moderate' %}" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-arrow-left-right me-2"></i>Moderate Transfers
-                        {% if pending_rumours > 0 %}
-                        <span class="badge bg-warning text-dark float-end">{{ pending_rumours }}</span>
-                        {% endif %}
-                    </a>
-                    <a href="{% url 'gold_hub:admin_gold_hub' %}" class="btn btn-outline-warning text-start">
-                        <i class="bi bi-star-fill me-2"></i>Manage Gold Hub
-                    </a>
-                    <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-secondary text-start">
-                        <i class="bi bi-bag me-2"></i>Browse Catalogue
-                    </a>
-                    <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-secondary text-start">
-                        <i class="bi bi-newspaper me-2"></i>Transfers Page
-                    </a>
-                    <a href="/admin/" class="btn btn-outline-dark text-start">
-                        <i class="bi bi-gear me-2"></i>Django Admin Panel
-                    </a>
-                    <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-bag-fill me-2"></i>Manage Products
-                    </a>
-                    
-                    <a href="{% url 'catalogue:admin_category_list' %}" class="btn btn-outline-danger text-start">
-                        <i class="bi bi-tags-fill me-2"></i>Manage Categories
-                    </a>
-
-                </div>
-            </div>
+<div class="admin-panel mb-4">
+    <div class="admin-panel-header">
+        <i class="bi bi-lightning-fill me-2"></i>Quick Navigation
+    </div>
+    <div class="admin-panel-body d-grid gap-2">
+        <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-outline-danger text-start">
+            <i class="bi bi-box-seam me-2"></i>Manage Products
+        </a>
+        <a href="{% url 'catalogue:admin_product_add' %}" class="btn btn-outline-danger text-start">
+            <i class="bi bi-plus-circle me-2"></i>Add Product
+        </a>
+        <a href="{% url 'catalogue:admin_category_list' %}" class="btn btn-outline-danger text-start">
+            <i class="bi bi-tags me-2"></i>Manage Categories
+        </a>
+        <a href="{% url 'transfers:admin_moderate' %}" class="btn btn-outline-danger text-start">
+            <i class="bi bi-arrow-left-right me-2"></i>Moderate Transfers
+            {% if pending_rumours > 0 %}
+            <span class="badge bg-warning text-dark float-end">{{ pending_rumours }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'gold_hub:admin_gold_hub' %}" class="btn btn-outline-warning text-start">
+            <i class="bi bi-star-fill me-2"></i>Manage Gold Hub
+        </a>
+        <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-secondary text-start">
+            <i class="bi bi-bag me-2"></i>Browse Catalogue
+        </a>
+        <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-secondary text-start">
+            <i class="bi bi-newspaper me-2"></i>Transfers Page
+        </a>
+        <a href="/admin/" class="btn btn-outline-dark text-start">
+            <i class="bi bi-gear me-2"></i>Django Admin Panel
+        </a>
+    </div>
+</div>
 
             <!-- Pending Transfer Rumours -->
-            <div class="admin-panel mb-4">
+            <div class="admin-panel">
                 <div class="admin-panel-header">
                     <i class="bi bi-clock-fill me-2"></i>Pending Rumours
                     {% if pending_rumours > 0 %}
@@ -307,49 +308,57 @@
             </div>
 
             <!-- Contact Messages -->
-            <div class="admin-panel">
+            <div class="admin-panel mt-4">
                 <div class="admin-panel-header">
                     <i class="bi bi-envelope-fill me-2"></i>Contact Messages
                     {% if unread_messages > 0 %}
-                    <span class="badge bg-danger ms-1">{{ unread_messages }} unread</span>
+                    <span class="badge bg-warning text-dark ms-1">{{ unread_messages }} unread</span>
                     {% endif %}
                 </div>
                 <div class="admin-panel-body p-0">
-                    {% if recent_messages %}
+                    {% if contact_messages %}
                     <ul class="list-group list-group-flush">
-                        {% for msg in recent_messages %}
+                        {% for msg in contact_messages %}
                         <li class="list-group-item px-3 py-2 {% if not msg.is_read %}border-start border-danger border-3{% endif %}">
-                            <div class="d-flex justify-content-between align-items-start gap-2">
-                                <div class="min-w-0">
-                                    <div class="fw-semibold small text-truncate">{{ msg.subject }}</div>
-                                    <div class="text-muted" style="font-size:0.78rem;">
-                                        {{ msg.name }} · {{ msg.email }}
-                                    </div>
-                                    <div class="text-muted" style="font-size:0.75rem;">
-                                        {{ msg.submitted_at|date:"d M Y H:i" }}
-                                    </div>
-                                    <div class="small mt-1">{{ msg.message|truncatewords:12 }}</div>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span class="fw-semibold small">{{ msg.name }}</span>
+                                    {% if not msg.is_read %}
+                                    <span class="badge bg-danger ms-1" style="font-size:0.65rem;">New</span>
+                                    {% endif %}
+                                    <br>
+                                    <span class="text-muted" style="font-size:0.75rem;">{{ msg.email }}</span>
+                                    <br>
+                                    <span class="small text-muted">{{ msg.message|truncatewords:12 }}</span>
+                                    <br>
+                                    <span class="text-muted" style="font-size:0.72rem;">{{ msg.submitted_at|date:"d M Y, H:i" }}</span>
                                 </div>
-                                {% if not msg.is_read %}
-                                <form method="POST" action="{% url 'core:mark_message_read' msg.pk %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-xs btn-outline-secondary"
-                                            style="font-size:0.7rem;padding:2px 8px;white-space:nowrap;">
-                                        Mark Read
-                                    </button>
-                                </form>
-                                {% else %}
-                                <span class="text-success" style="font-size:0.75rem;white-space:nowrap;">
-                                    <i class="bi bi-check-circle-fill"></i> Read
-                                </span>
-                                {% endif %}
+                                <div class="d-flex gap-1 ms-2">
+                                    <form method="POST" action="{% url 'register:mark_message_read' msg.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-xs btn-outline-secondary"
+                                                style="font-size:0.7rem;padding:2px 6px;" title="Mark as read">
+                                            <i class="bi bi-check2"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'register:delete_message' msg.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-xs btn-outline-danger"
+                                                style="font-size:0.7rem;padding:2px 6px;" title="Delete message">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
+                            {% if msg.message|length > 60 %}
+                            <div class="mt-1 small text-muted border-top pt-1">{{ msg.message }}</div>
+                            {% endif %}
                         </li>
                         {% endfor %}
                     </ul>
                     {% else %}
                     <div class="text-center py-4 text-muted">
-                        <i class="bi bi-inbox fs-4 mb-2 d-block"></i>
+                        <i class="bi bi-envelope fs-4 mb-2 d-block opacity-25"></i>
                         <span class="small">No messages yet</span>
                     </div>
                     {% endif %}

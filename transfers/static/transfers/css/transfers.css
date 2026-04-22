@@ -1,4 +1,4 @@
-/* ===================== TRANSFERS HERO ===================== */
+/*  TRANSFERS HERO  */
 .transfers-hero {
     min-height: 320px;
     background: linear-gradient(135deg, #8b0000 0%, #dc3545 50%, #b22222 100%);
@@ -11,7 +11,7 @@
     background: rgba(0, 0, 0, 0.35);
 }
  
-/* ===================== FAVOURITE TRANSFERS CAROUSEL ===================== */
+/*  FAVOURITE TRANSFERS CAROUSEL  */
 .fav-transfer-card {
     background: var(--card-bg, #fff);
     border-radius: 12px;
@@ -42,7 +42,7 @@
     margin: 0 auto;
 }
  
-/* ===================== LIKELIHOOD BAR ===================== */
+/*  LIKELIHOOD BAR */
 .likelihood-bar-bg {
     width: 80px;
     height: 8px;
@@ -71,19 +71,19 @@
 .likelihood-bar[data-score="9"],
 .likelihood-bar[data-score="10"] { background: #198754; }
  
-/* ===================== POSITION BADGE COLOURS ===================== */
+/*  POSITION BADGE COLOURS */
 .bg-purple {
     background-color: #7952b3 !important;
     color: #fff;
 }
  
-/* ===================== FORM RANGE SLIDER ===================== */
+/*  FORM RANGE SLIDER */
 input[type="range"].form-range {
     width: 100%;
     accent-color: #dc3545;
 }
  
-/* ===================== DARK MODE ===================== */
+/* DARK MODE  */
 body.dark-mode .fav-transfer-card {
     background: #1e1e1e;
     color: #e0e0e0;

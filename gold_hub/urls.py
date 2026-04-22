@@ -8,9 +8,9 @@ urlpatterns = [
     path('gold-hub/vote/<int:option_id>/',     views.cast_vote,  name='cast_vote'),
 
     # Admin
-    path('manage/gold-hub/',                                views.admin_gold_hub,          name='admin_gold_hub'),
-    path('manage/gold-hub/polls/add/',                      views.admin_poll_add,           name='admin_poll_add'),
-    path('manage/gold-hub/polls/<int:pk>/edit/',            views.admin_poll_edit,          name='admin_poll_edit'),
+    path('manage/gold-hub/',    views.admin_gold_hub,   name='admin_gold_hub'),
+    path('manage/gold-hub/polls/add/',  views.admin_poll_add,   name='admin_poll_add'),
+    path('manage/gold-hub/polls/<int:pk>/edit/',    views.admin_poll_edit,  name='admin_poll_edit'),
     path('manage/gold-hub/polls/<int:pk>/delete/',          views.admin_poll_delete,        name='admin_poll_delete'),
     path('manage/gold-hub/polls/<int:pk>/options/',         views.admin_poll_options,       name='admin_poll_options'),
     path('manage/gold-hub/polls/<int:poll_pk>/options/add/',views.admin_option_add,         name='admin_option_add'),

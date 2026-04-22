@@ -1,4 +1,4 @@
-/* ===================== TRANSFERS PAGE JS ===================== */
+/* TRANSFERS PAGE JS */
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Auto-dismiss alerts after 4 seconds ---
+    // --- Auto-dismiss alerts after 4 seconds 
     document.querySelectorAll('.alert').forEach(function (alert) {
         setTimeout(function () {
             const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);

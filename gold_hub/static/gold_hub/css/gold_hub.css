@@ -1,4 +1,4 @@
-/* ===================== GOLD HUB ===================== */
+/*  GOLD HUB  */
 .gold-hub-header {
     background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 50%, #b8860b 100%);
     border-radius: 16px;
@@ -27,7 +27,7 @@
     letter-spacing: 0.05em;
 }
 
-/* ===================== POLL ===================== */
+/*  POLL  */
 .poll-card {
     border: 2px solid transparent;
     border-radius: 12px;
@@ -89,7 +89,7 @@
     transition: width 0.6s ease;
 }
 
-/* ===================== PLAYER STATS TABLE ===================== */
+/*  PLAYER STATS TABLE */
 .stats-panel {
     background: var(--card-bg, #fff);
     border-radius: 12px;
@@ -135,7 +135,7 @@
 .pos-MID { background: #b8860b; color: #fff; }
 .pos-FWD { background: #dc3545; color: #fff; }
 
-/* ===================== CLUB STAT CARDS ===================== */
+/*  CLUB STAT CARDS  */
 .club-stat-card {
     background: linear-gradient(135deg, #1a1a2e, #8b0000);
     border-radius: 12px;
@@ -158,9 +158,9 @@
     margin-top: 0.25rem;
 }
 
-/* ===================== DARK MODE ===================== */
-body.dark-mode .poll-card          { background: #1e1e1e; }
-body.dark-mode .poll-card.winner   { background: #1e1c00; }
-body.dark-mode .vote-bar-wrap      { background: #333; }
-body.dark-mode .stats-panel        { background: #1e1e1e; }
+/*  DARK MODE  */
+body.dark-mode .poll-card  { background: #1e1e1e; }
+body.dark-mode .poll-card.winner { background: #1e1c00; }
+body.dark-mode .vote-bar-wrap { background: #333; }
+body.dark-mode .stats-panel  { background: #1e1e1e; }
 body.dark-mode .stats-panel-header { background: #111; }

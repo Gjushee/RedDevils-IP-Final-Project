@@ -3,30 +3,37 @@
 
 {% block title %}Membership Plans — Red Devils Hub{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'register/css/membership.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="container my-5">
 
+    <!-- Header -->
     <div class="text-center mb-5">
         <h2 class="fw-bold">Choose Your Membership</h2>
         <p class="text-muted fs-5">Unlock more of the Red Devils Hub experience</p>
         {% if user.is_authenticated %}
-        <span class="badge px-3 py-2 fs-6"
-              style="background:
-                {% if current_role == 'gold' or current_role == 'admin' %}linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;
-                {% elif current_role == 'red' %}#dc3545;color:#fff;
-                {% else %}#6c757d;color:#fff;{% endif %}">
+        <span class="badge px-3 py-2 fs-6
+            {% if current_role == 'gold' or current_role == 'admin' %}badge-role-gold
+            {% elif current_role == 'red' %}badge-role-red
+            {% else %}badge-role-free{% endif %}">
             Current plan: {{ current_role|capfirst }} Member
         </span>
         {% endif %}
     </div>
 
+    <!-- Plan Cards -->
     <div class="row g-4 justify-content-center mb-5">
 
         <!-- FREE -->
         <div class="col-md-4">
             <div class="section-box h-100 d-flex flex-column {% if current_role == 'free' %}border border-2 border-secondary{% endif %}">
                 <div class="text-center mb-4">
-                    <div class="mb-3"><span style="font-size:2.5rem;">⚽</span></div>
+                    <div class="mb-3">
+                        <span style="font-size:2.5rem;">⚽</span>
+                    </div>
                     <h4 class="fw-bold">Free Member</h4>
                     <div class="display-6 fw-bold text-secondary my-2">Free</div>
                     <p class="text-muted small">Get started with no commitment</p>
@@ -51,9 +58,11 @@
 
         <!-- RED -->
         <div class="col-md-4">
-            <div class="section-box h-100 d-flex flex-column {% if current_role == 'red' %}border border-2 border-danger{% endif %}">
+            <div class="section-box h-100 d-flex flex-column card-red-border {% if current_role == 'red' %}border border-2 border-danger{% endif %}">
                 <div class="text-center mb-4">
-                    <div class="mb-3"><span style="font-size:2.5rem;">🔴</span></div>
+                    <div class="mb-3">
+                        <span style="font-size:2.5rem;">🔴</span>
+                    </div>
                     <h4 class="fw-bold text-danger">Red Member</h4>
                     <div class="display-6 fw-bold text-danger my-2">£4.99<span class="fs-6 fw-normal text-muted">/month</span></div>
                     <p class="text-muted small">For the passionate supporter</p>
@@ -86,17 +95,20 @@
 
         <!-- GOLD -->
         <div class="col-md-4">
-            <div class="section-box h-100 d-flex flex-column position-relative overflow-hidden"
-                 style="border: 2px solid #ffd700;">
+            <div class="section-box h-100 d-flex flex-column position-relative overflow-hidden card-gold-border
+                        {% if current_role == 'gold' or current_role == 'admin' %}border border-2{% endif %}">
+                <!-- Popular badge -->
                 <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge px-3 py-2" style="background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;font-weight:700;">
+                    <span class="badge px-3 py-2 badge-best-value">
                         ⭐ Best Value
                     </span>
                 </div>
                 <div class="text-center mb-4">
-                    <div class="mb-3"><span style="font-size:2.5rem;">🏆</span></div>
-                    <h4 class="fw-bold" style="color:#b8860b;">Gold Member</h4>
-                    <div class="display-6 fw-bold my-2" style="color:#b8860b;">£9.99<span class="fs-6 fw-normal text-muted">/month</span></div>
+                    <div class="mb-3">
+                        <span style="font-size:2.5rem;">🏆</span>
+                    </div>
+                    <h4 class="fw-bold text-gold">Gold Member</h4>
+                    <div class="display-6 fw-bold my-2 text-gold">£9.99<span class="fs-6 fw-normal text-muted">/month</span></div>
                     <p class="text-muted small">The ultimate fan experience</p>
                 </div>
                 <ul class="list-unstyled mb-4 flex-grow-1">
@@ -110,19 +122,15 @@
                     <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Priority support</li>
                 </ul>
                 {% if current_role == 'gold' or current_role == 'admin' %}
-                <button class="btn w-100 fw-bold" style="background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;" disabled>
+                <button class="btn btn-gold w-100 fw-bold" disabled>
                     Current Plan
                 </button>
                 {% elif user.is_authenticated %}
-                <a href="{% url 'register:membership_checkout' 'gold' %}"
-                   class="btn w-100 fw-bold"
-                   style="background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;">
+                <a href="{% url 'register:membership_checkout' 'gold' %}" class="btn btn-gold w-100 fw-bold">
                     <i class="bi bi-star-fill me-2"></i>Upgrade to Gold
                 </a>
                 {% else %}
-                <a href="{% url 'register:login' %}"
-                   class="btn w-100 fw-bold"
-                   style="background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a1a;">
+                <a href="{% url 'register:login' %}" class="btn btn-gold w-100 fw-bold">
                     <i class="bi bi-person me-2"></i>Login to Upgrade
                 </a>
                 {% endif %}
@@ -131,6 +139,7 @@
 
     </div>
 
+    <!-- FAQ / Note -->
     <div class="section-box text-center py-4">
         <p class="text-muted mb-1">
             <i class="bi bi-info-circle me-1"></i>

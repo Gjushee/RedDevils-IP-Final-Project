@@ -16,7 +16,7 @@
     color: #fff;
 }
 
-/* ===================== STAT CARDS ===================== */
+/*  STAT CARDS  */
 .admin-stat-card {
     background: var(--card-bg, #fff);
     border-radius: 12px;
@@ -45,7 +45,7 @@
     border: 2px solid #ffc107 !important;
 }
 
-/* ===================== ADMIN PANELS ===================== */
+/* ADMIN PANELS */
 .admin-panel {
     background: var(--card-bg, #fff);
     border-radius: 12px;
@@ -67,7 +67,7 @@
     padding: 1.25rem;
 }
 
-/* ===================== ROLE PILLS ===================== */
+/*  ROLE PILLS  */
 .role-pill {
     border-radius: 12px;
     padding: 1rem 0.5rem;
@@ -95,7 +95,7 @@
 .role-gold  { background: #fffbec; color: #b8860b; }
 .role-admin { background: #f0f0f0; color: #212529; }
 
-/* ===================== TABLE TWEAKS ===================== */
+/*  TABLE TWEAKS  */
 .admin-panel .table thead th {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -106,7 +106,7 @@
     font-size: 0.88rem;
 }
 
-/* ===================== DARK MODE ===================== */
+/*  DARK MODE  */
 body.dark-mode .admin-stat-card { background: #1e1e1e; }
 body.dark-mode .admin-panel { background: #1e1e1e; }
 body.dark-mode .admin-panel-header { background: #111; }

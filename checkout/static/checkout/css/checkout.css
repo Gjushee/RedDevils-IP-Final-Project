@@ -1,4 +1,4 @@
-/* ===================== CHECKOUT PANELS ===================== */
+/*  CHECKOUT PANELS  */
 .checkout-panel {
     background: var(--card-bg, #fff);
     border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 .checkout-panel-body { padding: 1.25rem; }
 
-/* ===================== PAYMENT TABS ===================== */
+/*  PAYMENT TABS */
 .payment-tabs { display: flex; gap: 0.5rem; }
 .payment-tab {
     flex: 1;
@@ -37,7 +37,7 @@
 }
 .payment-tab:hover:not(.active) { border-color: #adb5bd; color: #333; }
 
-/* ===================== CARD PREVIEW ===================== */
+/*  CARD PREVIEW  */
 .card-preview {
     background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 60%, #dc3545 100%);
     border-radius: 16px;
@@ -70,7 +70,7 @@
 .card-brand-logo { opacity: 0.85; }
 #cardCvv { letter-spacing: 0.2em; }
 
-/* ===================== CONFIRMATION ===================== */
+/*  CONFIRMATION  */
 .confirm-icon {
     width: 80px; height: 80px;
     background: linear-gradient(135deg, #198754, #20c997);
@@ -82,7 +82,7 @@
     box-shadow: 0 6px 20px rgba(25,135,84,0.4);
 }
 
-/* ===================== DARK MODE ===================== */
+/*  DARK MODE  */
 body.dark-mode .checkout-panel { background: #1e1e1e; }
 body.dark-mode .checkout-panel-header { background: #111; }
 body.dark-mode .payment-tab { background: #2a2a2a; border-color: #444; color: #adb5bd; }

@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<!-- ===================== ADMIN HEADER ===================== -->
+<!--  ADMIN HEADER  -->
 <div class="admin-header">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -39,7 +39,7 @@
 
 <div class="container my-5">
 
-    <!-- ===================== STATS ROW ===================== -->
+    <!-- STATS ROW  -->
     <div class="row g-4 mb-5">
         <div class="col-6 col-md-3">
             <div class="admin-stat-card">
@@ -81,7 +81,7 @@
 
     <div class="row g-5">
 
-        <!-- ===================== LEFT: USER MANAGEMENT ===================== -->
+        <!-- LEFT: USER MANAGEMENT  -->
         <div class="col-lg-8">
 
             <!-- Membership Breakdown -->
@@ -194,7 +194,7 @@
 
         </div>
 
-        <!-- ===================== RIGHT: SIDEBAR PANELS ===================== -->
+        <!--  RIGHT: SIDEBAR PANELS -->
         <div class="col-lg-4">
 
             <!-- Messages -->
@@ -209,40 +209,40 @@
             {% endif %}
 
             <!-- Quick Navigation -->
-<div class="admin-panel mb-4">
-    <div class="admin-panel-header">
-        <i class="bi bi-lightning-fill me-2"></i>Quick Navigation
-    </div>
-    <div class="admin-panel-body d-grid gap-2">
-        <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-outline-danger text-start">
-            <i class="bi bi-box-seam me-2"></i>Manage Products
-        </a>
-        <a href="{% url 'catalogue:admin_product_add' %}" class="btn btn-outline-danger text-start">
-            <i class="bi bi-plus-circle me-2"></i>Add Product
-        </a>
-        <a href="{% url 'catalogue:admin_category_list' %}" class="btn btn-outline-danger text-start">
-            <i class="bi bi-tags me-2"></i>Manage Categories
-        </a>
-        <a href="{% url 'transfers:admin_moderate' %}" class="btn btn-outline-danger text-start">
-            <i class="bi bi-arrow-left-right me-2"></i>Moderate Transfers
-            {% if pending_rumours > 0 %}
-            <span class="badge bg-warning text-dark float-end">{{ pending_rumours }}</span>
-            {% endif %}
-        </a>
-        <a href="{% url 'gold_hub:admin_gold_hub' %}" class="btn btn-outline-warning text-start">
-            <i class="bi bi-star-fill me-2"></i>Manage Gold Hub
-        </a>
-        <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-secondary text-start">
-            <i class="bi bi-bag me-2"></i>Browse Catalogue
-        </a>
-        <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-secondary text-start">
-            <i class="bi bi-newspaper me-2"></i>Transfers Page
-        </a>
-        <a href="/admin/" class="btn btn-outline-dark text-start">
-            <i class="bi bi-gear me-2"></i>Django Admin Panel
-        </a>
-    </div>
-</div>
+            <div class="admin-panel mb-4">
+                <div class="admin-panel-header">
+                    <i class="bi bi-lightning-fill me-2"></i>Quick Navigation
+                </div>
+                <div class="admin-panel-body d-grid gap-2">
+                    <a href="{% url 'catalogue:admin_product_list' %}" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-box-seam me-2"></i>Manage Products
+                    </a>
+                    <a href="{% url 'catalogue:admin_product_add' %}" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-plus-circle me-2"></i>Add Product
+                    </a>
+                    <a href="{% url 'catalogue:admin_category_list' %}" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-tags me-2"></i>Manage Categories
+                    </a>
+                    <a href="{% url 'transfers:admin_moderate' %}" class="btn btn-outline-danger text-start">
+                        <i class="bi bi-arrow-left-right me-2"></i>Moderate Transfers
+                        {% if pending_rumours > 0 %}
+                        <span class="badge bg-warning text-dark float-end">{{ pending_rumours }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'gold_hub:admin_gold_hub' %}" class="btn btn-outline-warning text-start">
+                        <i class="bi bi-star-fill me-2"></i>Manage Gold Hub
+                    </a>
+                    <a href="{% url 'catalogue:catalogue' %}" class="btn btn-outline-secondary text-start">
+                        <i class="bi bi-bag me-2"></i>Browse Catalogue
+                    </a>
+                    <a href="{% url 'transfers:transfers' %}" class="btn btn-outline-secondary text-start">
+                        <i class="bi bi-newspaper me-2"></i>Transfers Page
+                    </a>
+                    <a href="/admin/" class="btn btn-outline-dark text-start">
+                        <i class="bi bi-gear me-2"></i>Django Admin Panel
+                    </a>
+                </div>
+            </div>
 
             <!-- Pending Transfer Rumours -->
             <div class="admin-panel">

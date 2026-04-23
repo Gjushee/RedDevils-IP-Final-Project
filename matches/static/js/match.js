@@ -1,6 +1,6 @@
-// =============================================
+
 // MATCH RATINGS — JavaScript
-// =============================================
+
  
 // Generate rating buttons 1–10 for every player card
 function createRatingButtons() {

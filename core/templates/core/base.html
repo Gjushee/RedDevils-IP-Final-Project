@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<!-- ===================== NAVBAR ===================== -->
+<!--  NAVBAR  -->
 <nav class="navbar navbar-expand-xl custom-navbar sticky-top">
     <div class="container">
 
@@ -132,10 +132,10 @@
     </div>
 </nav>
 
-<!-- ===================== PAGE CONTENT ===================== -->
+<!-- PAGE CONTENT  -->
 {% block content %}{% endblock %}
 
-<!-- ===================== FLOATING CART BUTTON ===================== -->
+<!-- FLOATING CART BUTTON  -->
 {% if user.is_authenticated %}
 <button class="floating-cart-btn" id="floatingCartBtn"
         data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
@@ -183,7 +183,7 @@
 </div>
 {% endif %}
 
-<!-- ===================== FOOTER ===================== -->
+<!--  FOOTER  -->
 <footer class="main-footer text-white pt-5 pb-3 mt-5">
     <div class="container">
         <div class="row g-4">

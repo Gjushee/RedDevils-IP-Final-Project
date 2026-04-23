@@ -74,12 +74,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE     = "UTC"
-USE_I18N      = True
-USE_TZ        = True
+TIME_ZONE  = "UTC"
+USE_I18N   = True
+USE_TZ  = True
 
-STATIC_URL       = "/static/"
-STATIC_ROOT      = BASE_DIR / "staticfiles"
+STATIC_URL  = "/static/"
+STATIC_ROOT  = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
 
 STORAGES = {
@@ -97,16 +97,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL          = '/login/'
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND      = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND  = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@reddevilshub.com')
 
 GOLD_DISCOUNT_PERCENT = 10
-PAYPAL_CLIENT_ID      = config('PAYPAL_CLIENT_ID', default='')
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID', default='')
 PAYPAL_CLIENT_SECRET  = config('PAYPAL_CLIENT_SECRET', default='')
-PAYPAL_MODE           = config('PAYPAL_MODE', default='sandbox')
+PAYPAL_MODE = config('PAYPAL_MODE', default='sandbox')
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER   = True

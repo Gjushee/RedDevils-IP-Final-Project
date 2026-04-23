@@ -8,7 +8,7 @@
         return cookie ? cookie.split('=')[1] : '';
     }
  
-    // ── Toggle wishlist from catalogue / product detail ──────────
+    // Toggle wishlist from catalogue / product detail 
     document.querySelectorAll('.wishlist-toggle-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -40,7 +40,7 @@
         });
     });
  
-    // ── Remove from wishlist page ─────────────────────────────────
+    //  Remove from wishlist page 
     document.querySelectorAll('.wishlist-remove-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             const productId = this.dataset.productId;

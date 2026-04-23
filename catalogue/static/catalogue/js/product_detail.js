@@ -7,7 +7,7 @@ function getCSRF() {
     return match ? match[1] : '';
 }
 
-// ── Star Rating ──────────────────────────────────────────────────
+// Star Rating 
 (function () {
     const widget   = document.getElementById('starWidget');
     const feedback = document.getElementById('ratingFeedback');
@@ -59,7 +59,7 @@ function getCSRF() {
     });
 })();
 
-// ── Add to Cart ──────────────────────────────────────────────────
+// Add to Cart 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('addToCartForm');
     if (!form) return;

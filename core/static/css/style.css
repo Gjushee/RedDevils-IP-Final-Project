@@ -1,6 +1,4 @@
-/* =============================================
-   RED DEVILS HUB — GLOBAL STYLES
-   ============================================= */
+/* RED DEVILS HUB — GLOBAL STYLES */
 
 /* GLOBAL BACKGROUND */
 body {
@@ -18,9 +16,7 @@ body::before {
   z-index: -1;
 }
 
-/* =============================================
-   NAVBAR
-   ============================================= */
+/*  NAVBAR */
 .custom-navbar {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
@@ -121,9 +117,7 @@ body::before {
   padding: 2rem;
 }
 
-/* =============================================
-   SECTION BOX
-   ============================================= */
+/* SECTION BOX */
 .section-box {
   background: rgba(255, 255, 255, 0.92);
   border-radius: 16px;
@@ -151,9 +145,7 @@ body::before {
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
 }
 
-/* =============================================
-   CARDS
-   ============================================= */
+/*  CARDS */
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-radius: 16px;
@@ -164,18 +156,14 @@ body::before {
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* =============================================
-   MATCH CAROUSEL
-   ============================================= */
+/*  MATCH CAROUSEL */
 .match-image {
   max-height: 400px;
   object-fit: cover;
   border-radius: 14px;
 }
 
-/* =============================================
-   PREMIER LEAGUE TABLE
-   ============================================= */
+/*   PREMIER LEAGUE TABLE */
 .table {
   border-radius: 14px;
   overflow: hidden;
@@ -242,9 +230,7 @@ body::before {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
 }
 
-/* =============================================
-   BUTTONS
-   ============================================= */
+/*  BUTTONS   */
 .btn-danger {
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(220, 53, 69, 0.25);
@@ -256,9 +242,7 @@ body::before {
   box-shadow: 0 14px 28px rgba(220, 53, 69, 0.35);
 }
 
-/* =============================================
-   FOOTER
-   ============================================= */
+/* FOOTER */
 .main-footer {
   background-color: #111827;
 }
@@ -299,9 +283,7 @@ body::before {
   transform: translateY(-3px);
 }
 
-/* =============================================
-   DARK MODE TOGGLE BUTTON
-   ============================================= */
+/*   DARK MODE TOGGLE BUTTON  */
 .dark-toggle-btn {
   border-radius: 50px;
   padding: 6px 10px;
@@ -315,9 +297,7 @@ body::before {
   color: white;
 }
 
-/* =============================================
-   DARK MODE
-   ============================================= */
+/*  DARK MODE */
 body {
   transition: background 0.3s ease, color 0.3s ease;
 }
@@ -637,17 +617,13 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   background: #dc3545;
 }
 
-/* =============================================
-   SPACING
-   ============================================= */
+/* SPACING */
 section {
   padding-top: 40px;
   padding-bottom: 40px;
 }
 
-/* =============================================
-   ADMIN PROFILE BANNER
-   ============================================= */
+/* ADMIN PROFILE BANNER */
 .admin-profile-banner {
   background: linear-gradient(135deg, #1a1a2e 0%, #8b0000 60%, #dc3545 100%);
   padding: 1rem 0;

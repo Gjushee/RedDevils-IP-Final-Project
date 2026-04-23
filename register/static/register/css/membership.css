@@ -1,0 +1,28 @@
+/* Role badge colours */
+.badge-role-gold { background: linear-gradient(135deg, #b8860b, #ffd700); color: #1a1a1a; }
+.badge-role-red  { background: #dc3545; color: #fff; }
+.badge-role-free { background: #6c757d; color: #fff; }
+
+/* Card borders */
+.card-red-border  { border: 2px solid rgba(220, 53, 69, 0.2); }
+.card-gold-border { border: 2px solid #ffd700; }
+
+/* Gold button */
+.btn-gold {
+    background: linear-gradient(135deg, #b8860b, #ffd700);
+    color: #1a1a1a;
+}
+.btn-gold:hover {
+    background: linear-gradient(135deg, #9a7209, #e6c200);
+    color: #1a1a1a;
+}
+
+/* Gold text */
+.text-gold { color: #b8860b; }
+
+/* Gold best-value badge */
+.badge-best-value {
+    background: linear-gradient(135deg, #b8860b, #ffd700);
+    color: #1a1a1a;
+    font-weight: 700;
+}

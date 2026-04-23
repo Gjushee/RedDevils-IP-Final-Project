@@ -88,7 +88,7 @@ def _send_verification_email(request, user, profile):
         f'Please click the link below to verify your email address:\n\n'
         f'{verify_url}\n\n'
         f'If you did not create this account you can ignore this email.\n\n'
-        f'COYР — Red Devils Hub'
+        f'COYR — Red Devils Hub'
     )
     send_mail(
         subject,
@@ -217,17 +217,15 @@ def admin_dashboard(request):
         contact_messages = []
         unread_messages  = 0
 
-
     context = {
-        'all_users':       all_users,
-        'total_users':     total_users,
-        'role_counts':     role_counts,
-        'pending_rumours': pending_rumours,
-        'recent_rumours':  recent_rumours,
-        'total_products':  total_products,
+        'all_users':        all_users,
+        'total_users':      total_users,
+        'role_counts':      role_counts,
+        'pending_rumours':  pending_rumours,
+        'recent_rumours':   recent_rumours,
         'contact_messages': contact_messages,
         'unread_messages':  unread_messages,
-
+        'total_products':   total_products,
     }
     return render(request, 'register/admin_dashboard.html', context)
 
@@ -331,12 +329,10 @@ def membership_checkout(request, plan):
     except Exception:
         pass
 
-    # Admins have access to everything — no purchase needed
     if current_role == 'admin':
         messages.info(request, 'As an admin you already have access to all membership benefits.')
         return redirect('register:membership_plans')
 
-    # Already on this plan or higher
     tier_order = ['free', 'red', 'gold']
     if current_role in tier_order and tier_order.index(current_role) >= tier_order.index(plan):
         messages.info(request, f'You are already on {MEMBERSHIP_PLANS[current_role]["name"]} or higher.')
@@ -452,6 +448,7 @@ def mark_message_read(request, pk):
     msg.save()
     return redirect('register:admin_dashboard')
 
+
 def delete_message(request, pk):
     if not request.user.is_authenticated or not request.user.profile.is_admin():
         return redirect('core:home')
@@ -459,5 +456,3 @@ def delete_message(request, pk):
     msg = get_object_or_404(ContactMessage, pk=pk)
     msg.delete()
     return redirect('register:admin_dashboard')
-
-

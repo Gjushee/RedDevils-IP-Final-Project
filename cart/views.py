@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -14,9 +15,6 @@ def _get_or_create_cart(user):
     return cart
 
 
-# ──────────────────────────────────────────────
-# ADD TO CART
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def add_to_cart(request, product_id):
@@ -56,14 +54,11 @@ def add_to_cart(request, product_id):
     return redirect('catalogue:product_detail', slug=product.slug)
 
 
-# ──────────────────────────────────────────────
-# UPDATE QUANTITY (+/-)
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def update_quantity(request, item_id):
     item    = get_object_or_404(CartItem, pk=item_id, cart__user=request.user)
-    action  = request.POST.get('action')  # 'increase' or 'decrease'
+    action  = request.POST.get('action')
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if action == 'increase':
@@ -106,9 +101,6 @@ def update_quantity(request, item_id):
     return redirect('cart:cart_detail')
 
 
-# ──────────────────────────────────────────────
-# REMOVE ITEM
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def remove_item(request, item_id):
@@ -129,9 +121,6 @@ def remove_item(request, item_id):
     return redirect('cart:cart_detail')
 
 
-# ──────────────────────────────────────────────
-# CLEAR ENTIRE CART
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 @require_POST
 def clear_cart(request):
@@ -144,19 +133,51 @@ def clear_cart(request):
     return redirect('cart:cart_detail')
 
 
-# ──────────────────────────────────────────────
-# CART DETAIL PAGE
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 def cart_detail(request):
+    from django.conf import settings
     cart  = _get_or_create_cart(request.user)
     items = cart.items.select_related('product').all()
-    return render(request, 'cart/cart_detail.html', {'cart': cart, 'items': items})
+
+    try:
+        role = request.user.profile.role
+    except Exception:
+        role = 'free'
+
+    is_gold      = role in ('gold', 'admin')
+    discount_pct = getattr(settings, 'GOLD_DISCOUNT_PERCENT', 10) if is_gold else 0
+
+    def _item_price(item):
+        price = item.product.price
+        if is_gold:
+            price = round(price * Decimal(str(1 - discount_pct / 100)), 2)
+        return price
+
+    enriched_items = [
+        {
+            'item':       i,
+            'unit_price': _item_price(i),
+            'line_total': round(_item_price(i) * i.quantity, 2),
+        }
+        for i in items
+    ]
+
+    original_total  = cart.total_price
+    display_total   = round(sum(e['line_total'] for e in enriched_items), 2)
+    discount_amount = round(original_total - display_total, 2)
+
+    return render(request, 'cart/cart_detail.html', {
+        'cart':            cart,
+        'items':           items,
+        'enriched_items':  enriched_items,
+        'is_gold':         is_gold,
+        'discount_pct':    discount_pct,
+        'original_total':  original_total,
+        'display_total':   display_total,
+        'discount_amount': discount_amount,
+    })
 
 
-# ──────────────────────────────────────────────
-# CART SUMMARY (JSON — used by the floating panel)
-# ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 def cart_summary(request):
     cart  = _get_or_create_cart(request.user)
@@ -179,10 +200,6 @@ def cart_summary(request):
         'total_price': str(cart.total_price),
     })
 
-
-# ──────────────────────────────────────────────
-# WISHLIST
-# ──────────────────────────────────────────────
 
 @login_required
 def wishlist_page(request):

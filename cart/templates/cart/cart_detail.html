@@ -24,17 +24,19 @@
     {% if items %}
     <div class="row g-4">
 
+        <!-- Cart Items -->
         <div class="col-lg-8">
             <div class="section-box p-0 overflow-hidden">
-                {% for item in items %}
+                {% for entry in enriched_items %}
                 <div class="cart-item-row d-flex gap-3 align-items-center p-3
                     {% if not forloop.last %}border-bottom{% endif %}"
-                    id="cart-row-{{ item.pk }}">
+                    id="cart-row-{{ entry.item.pk }}">
 
-                    <a href="{% url 'catalogue:product_detail' item.product.slug %}">
-                        {% if item.product.primary_image %}
-                        <img src="{{ item.product.primary_image.image.url }}"
-                             alt="{{ item.product.name }}"
+                    <!-- Product Image -->
+                    <a href="{% url 'catalogue:product_detail' entry.item.product.slug %}">
+                        {% if entry.item.product.primary_image %}
+                        <img src="{{ entry.item.product.primary_image.image.url }}"
+                             alt="{{ entry.item.product.name }}"
                              class="cart-item-img rounded">
                         {% else %}
                         <div class="cart-item-img-placeholder rounded d-flex align-items-center justify-content-center bg-light">
@@ -43,19 +45,28 @@
                         {% endif %}
                     </a>
 
+                    <!-- Details -->
                     <div class="flex-grow-1 min-w-0">
-                        <a href="{% url 'catalogue:product_detail' item.product.slug %}"
+                        <a href="{% url 'catalogue:product_detail' entry.item.product.slug %}"
                            class="fw-semibold text-decoration-none text-body d-block text-truncate">
-                            {{ item.product.name }}
+                            {{ entry.item.product.name }}
                         </a>
-                        {% if item.size and item.size != '—' %}
-                        <small class="text-muted">Size: {{ item.size }}</small>
+                        {% if entry.item.size and entry.item.size != '—' %}
+                        <small class="text-muted">Size: {{ entry.item.size }}</small>
                         {% endif %}
-                        <div class="text-danger fw-bold mt-1">£{{ item.product.price }}</div>
+                        {% if is_gold %}
+                        <div class="mt-1">
+                            <span class="text-muted text-decoration-line-through small">£{{ entry.item.product.price }}</span>
+                            <span class="text-danger fw-bold ms-1">£{{ entry.unit_price }}</span>
+                        </div>
+                        {% else %}
+                        <div class="text-danger fw-bold mt-1">£{{ entry.item.product.price }}</div>
+                        {% endif %}
                     </div>
 
+                    <!-- Quantity Controls -->
                     <div class="d-flex align-items-center gap-2">
-                        <form method="POST" action="{% url 'cart:update_quantity' item.pk %}" class="d-inline">
+                        <form method="POST" action="{% url 'cart:update_quantity' entry.item.pk %}" class="d-inline">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="decrease">
                             <button type="submit" class="btn btn-outline-secondary btn-sm cart-qty-btn">
@@ -63,9 +74,9 @@
                             </button>
                         </form>
 
-                        <span class="cart-qty-display fw-bold">{{ item.quantity }}</span>
+                        <span class="cart-qty-display fw-bold" id="qty-{{ entry.item.pk }}">{{ entry.item.quantity }}</span>
 
-                        <form method="POST" action="{% url 'cart:update_quantity' item.pk %}" class="d-inline">
+                        <form method="POST" action="{% url 'cart:update_quantity' entry.item.pk %}" class="d-inline">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="increase">
                             <button type="submit" class="btn btn-outline-secondary btn-sm cart-qty-btn">
@@ -74,11 +85,13 @@
                         </form>
                     </div>
 
-                    <div class="fw-bold text-end" style="min-width:70px;">
-                        £{{ item.line_total }}
+                    <!-- Line Total -->
+                    <div class="fw-bold text-end" style="min-width:70px;" id="line-{{ entry.item.pk }}">
+                        £{{ entry.line_total }}
                     </div>
 
-                    <form method="POST" action="{% url 'cart:remove_item' item.pk %}">
+                    <!-- Remove -->
+                    <form method="POST" action="{% url 'cart:remove_item' entry.item.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Remove this item?')">
@@ -90,6 +103,7 @@
                 {% endfor %}
             </div>
 
+            <!-- Clear Cart -->
             <div class="text-end mt-3">
                 <form method="POST" action="{% url 'cart:clear_cart' %}">
                     {% csrf_token %}
@@ -101,13 +115,21 @@
             </div>
         </div>
 
+        <!-- Order Summary -->
         <div class="col-lg-4">
             <div class="section-box">
                 <h5 class="fw-bold mb-4">Order Summary</h5>
+
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted">Items ({{ cart.total_items }})</span>
-                    <span class="fw-semibold">£{{ cart.total_price }}</span>
+                    <span class="fw-semibold">£{{ original_total }}</span>
                 </div>
+                {% if is_gold %}
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-warning fw-semibold"><i class="bi bi-star-fill me-1"></i>Gold Discount ({{ discount_pct }}%)</span>
+                    <span class="text-warning fw-semibold">-£{{ discount_amount }}</span>
+                </div>
+                {% endif %}
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted">Delivery</span>
                     <span class="text-success fw-semibold">Free</span>
@@ -115,13 +137,14 @@
                 <hr>
                 <div class="d-flex justify-content-between mb-4">
                     <span class="fw-bold fs-5">Total</span>
-                    <span class="fw-bold fs-5 text-danger">£{{ cart.total_price }}</span>
+                    <span class="fw-bold fs-5 text-danger">£{{ display_total }}</span>
                 </div>
+
                 <a href="{% url 'checkout:checkout' %}" class="btn btn-danger w-100 py-3 fw-bold">
                     <i class="bi bi-lock-fill me-2"></i>Proceed to Checkout
                 </a>
                 <p class="text-muted text-center small mt-2">
-                    This is a demo store — no real payments are processed.
+                    Demo store — no real payments are processed.
                 </p>
             </div>
         </div>
